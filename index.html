@@ -498,6 +498,17 @@
             transform: translateY(-1px);
         }
 
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
         .buttons-row {
             display: flex;
             gap: 10px;
@@ -1080,6 +1091,73 @@
             font-weight: 600;
         }
 
+        /* Admin Task List */
+        .admin-task-item {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+
+        .admin-task-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .admin-task-info {
+            flex: 1;
+        }
+
+        .admin-task-number {
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 4px;
+        }
+
+        .admin-task-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .admin-task-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .admin-task-action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-task-action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .admin-task-action-btn.edit:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .admin-task-action-btn.delete:hover {
+            background: var(--error-color);
+            color: white;
+        }
+
         /* Responsive */
         @media (max-width: 480px) {
             .stats-row {
@@ -1317,6 +1395,21 @@
             <!-- Tasks Admin -->
             <div class="admin-content active" id="admin-tasks-tab">
                 <div class="form-group">
+                    <label class="form-label">Режим редактирования</label>
+                    <select class="form-select" id="admin-edit-mode">
+                        <option value="new">Добавить новое задание</option>
+                        <option value="edit">Редактировать существующее</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="edit-task-select-group" style="display: none;">
+                    <label class="form-label">Выберите задание для редактирования</label>
+                    <select class="form-select" id="admin-edit-task-select">
+                        <option value="">Выберите задание...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
                     <label class="form-label">Номер задания (1-27)</label>
                     <input type="number" class="form-input" id="admin-task-number" min="1" max="27" value="1">
                 </div>
@@ -1369,13 +1462,17 @@
                 <div class="admin-buttons">
                     <button class="btn btn-primary" id="save-task-btn">
                         <i class="fas fa-save"></i>
-                        <span>Сохранить задание</span>
+                        <span id="save-task-btn-text">Сохранить задание</span>
+                    </button>
+                    <button class="btn btn-danger" id="delete-task-btn" style="display: none;">
+                        <i class="fas fa-trash"></i>
+                        <span>Удалить задание</span>
                     </button>
                 </div>
                 
                 <div class="form-group" style="margin-top: 30px;">
                     <label class="form-label">Все задания (всего: <span id="admin-tasks-count">0</span>)</label>
-                    <div id="admin-tasks-list" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; background: var(--bg-tertiary);">
+                    <div id="admin-tasks-list" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; background: var(--bg-tertiary);">
                         <!-- Список заданий будет здесь -->
                     </div>
                 </div>
@@ -1442,7 +1539,7 @@
                         <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">
                             Вы можете сбросить данные текущего пользователя (для тестирования)
                         </div>
-                        <button class="btn btn-secondary" id="reset-user-btn" style="width: 100%;">
+                        <button class="btn btn-danger" id="reset-user-btn" style="width: 100%;">
                             <i class="fas fa-trash"></i>
                             <span>Сбросить мои данные</span>
                         </button>
@@ -1522,10 +1619,11 @@
         let selectedOptions = {};
         let isAdminAuthenticated = false;
         let userId = null;
+        let editingTaskId = null;
         
         // Инициализация приложения
         function initApp() {
-            // Инициализация Telegram WebApp
+            // Инициализация Telegram WebApp с проверкой версии
             initTelegram();
             
             // Загрузка данных
@@ -1560,10 +1658,38 @@
             updateStreak();
         }
         
-        // Инициализация Telegram WebApp
+        // Инициализация Telegram WebApp с проверкой методов
         function initTelegram() {
-            tg.expand();
-            tg.enableClosingConfirmation();
+            // Проверяем, доступны ли методы Telegram WebApp
+            const tg = window.Telegram.WebApp;
+            
+            try {
+                tg.expand();
+            } catch (e) {
+                console.log("Telegram expand не поддерживается");
+            }
+            
+            // Пытаемся включить подтверждение закрытия с проверкой
+            if (tg.enableClosingConfirmation && typeof tg.enableClosingConfirmation === 'function') {
+                try {
+                    tg.enableClosingConfirmation();
+                } catch (e) {
+                    console.log("enableClosingConfirmation не поддерживается");
+                }
+            }
+            
+            // Проверяем поддержку BackButton
+            if (tg.BackButton && typeof tg.BackButton.show === 'function') {
+                tg.BackButton.onClick(() => {
+                    if (document.getElementById('admin-panel').classList.contains('active')) {
+                        closeAdminPanel();
+                    } else {
+                        tg.close();
+                    }
+                });
+            } else {
+                console.log("BackButton не поддерживается в этой версии");
+            }
             
             // Получаем ID пользователя
             if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
@@ -1577,15 +1703,6 @@
             if (tg.colorScheme === 'dark') {
                 document.body.classList.add('theme-dark');
             }
-            
-            // Настраиваем кнопку "Назад" в Telegram
-            tg.BackButton.onClick(() => {
-                if (document.getElementById('admin-panel').classList.contains('active')) {
-                    closeAdminPanel();
-                } else {
-                    tg.close();
-                }
-            });
         }
         
         // Загрузка данных пользователя
@@ -1674,14 +1791,20 @@
         function saveTasks() {
             localStorage.setItem(STORAGE_PREFIX + 'tasks', JSON.stringify(tasks));
             updateStatsDisplay();
+            renderTasksList();
+            updateNewTasksBadge();
+            
             if (isAdminAuthenticated) {
                 renderAdminTasksList();
+                populateEditTaskSelect();
             }
         }
         
         // Сохранение теории
         function saveTheory() {
             localStorage.setItem(STORAGE_PREFIX + 'theory', JSON.stringify(theory));
+            renderTheory();
+            
             if (isAdminAuthenticated) {
                 renderAdminTheoryList();
             }
@@ -1806,8 +1929,10 @@
                 return;
             }
             
-            const randomIndex = Math.floor(Math.random() * tasks.length);
-            currentTask = tasks[randomIndex];
+            const unsolvedTasks = tasks.filter(task => !stats.solvedTasks.includes(task.id));
+            const availableTasks = unsolvedTasks.length > 0 ? unsolvedTasks : tasks;
+            const randomIndex = Math.floor(Math.random() * availableTasks.length);
+            currentTask = availableTasks[randomIndex];
             
             // Обновляем отображение
             document.getElementById('task-number').textContent = `Задание #${currentTask.number}`;
@@ -1857,22 +1982,51 @@
                     
                     container.appendChild(optionElement);
                 });
-            } else if (currentTask.type === 'numbers') {
+            } else if (currentTask.type === 'multiple') {
+                answerInput.style.display = 'none';
+                
+                currentTask.options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option';
+                    optionElement.innerHTML = `
+                        <div class="option-marker">${String.fromCharCode(65 + index)}</div>
+                        <div class="option-text">${option}</div>
+                    `;
+                    
+                    optionElement.addEventListener('click', () => {
+                        // Переключаем выделение для multiple
+                        optionElement.classList.toggle('selected');
+                        
+                        if (!selectedOptions[currentTask.id]) {
+                            selectedOptions[currentTask.id] = [];
+                        }
+                        
+                        const selectedIndex = selectedOptions[currentTask.id].indexOf(option);
+                        if (selectedIndex === -1) {
+                            selectedOptions[currentTask.id].push(option);
+                        } else {
+                            selectedOptions[currentTask.id].splice(selectedIndex, 1);
+                        }
+                    });
+                    
+                    container.appendChild(optionElement);
+                });
+            } else if (currentTask.type === 'number') {
                 answerInput.style.display = 'block';
-                answerInput.placeholder = "Введите цифры через запятую (например: 1,2,3)";
+                answerInput.placeholder = "Введите число (например: 5)";
             } else {
                 answerInput.style.display = 'block';
                 answerInput.placeholder = "Введите ответ...";
             }
         }
         
-        // Проверка ответа
+        // Проверка ответа (ИСПРАВЛЕННАЯ)
         function checkAnswer() {
             let userAnswer;
             
-            if (currentTask.type === 'single') {
+            if (currentTask.type === 'single' || currentTask.type === 'multiple') {
                 userAnswer = selectedOptions[currentTask.id];
-                if (!userAnswer) {
+                if (!userAnswer || (Array.isArray(userAnswer) && userAnswer.length === 0)) {
                     showNotification('Выберите вариант ответа', 'error');
                     return;
                 }
@@ -1884,21 +2038,35 @@
                 }
             }
             
-            // Нормализуем ответы для сравнения
-            const normalizedUserAnswer = userAnswer.toString().toLowerCase().replace(/\s+/g, '');
-            const normalizedCorrectAnswer = currentTask.answer.toString().toLowerCase().replace(/\s+/g, '');
-            
             // Обновляем статистику
             stats.totalAttempts++;
             
             let isCorrect = false;
             
-            if (currentTask.type === 'numbers') {
-                const userNumbers = normalizedUserAnswer.split(',').map(n => n.trim()).filter(n => n).sort();
-                const correctNumbers = normalizedCorrectAnswer.split('').sort();
-                isCorrect = JSON.stringify(userNumbers) === JSON.stringify(correctNumbers);
+            if (currentTask.type === 'single') {
+                // Для одиночного выбора сравниваем строки
+                isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentTask.answer);
+            } else if (currentTask.type === 'multiple') {
+                // Для множественного выбора
+                if (Array.isArray(userAnswer) && Array.isArray(currentTask.answer)) {
+                    // Если ответ - массив
+                    const userAnswers = userAnswer.map(ans => normalizeAnswer(ans)).sort();
+                    const correctAnswers = currentTask.answer.map(ans => normalizeAnswer(ans)).sort();
+                    isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+                } else if (typeof currentTask.answer === 'string') {
+                    // Если ответ - строка с разделителями
+                    const userAnswers = userAnswer.map(ans => normalizeAnswer(ans)).sort();
+                    const correctAnswers = currentTask.answer.split(',').map(ans => normalizeAnswer(ans.trim())).sort();
+                    isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+                }
+            } else if (currentTask.type === 'number') {
+                // Для числовых ответов
+                const userNum = parseFloat(userAnswer.replace(',', '.'));
+                const correctNum = parseFloat(currentTask.answer);
+                isCorrect = !isNaN(userNum) && !isNaN(correctNum) && userNum === correctNum;
             } else {
-                isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+                // Для текстовых ответов
+                isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentTask.answer);
             }
             
             if (isCorrect) {
@@ -1952,6 +2120,14 @@
             saveUserData();
         }
         
+        // Нормализация ответа для сравнения
+        function normalizeAnswer(answer) {
+            if (Array.isArray(answer)) {
+                return answer.map(item => item.toString().toLowerCase().trim()).sort().join(',');
+            }
+            return answer.toString().toLowerCase().trim().replace(/\s+/g, ' ');
+        }
+        
         // Показать результат
         function showResult(isCorrect, userAnswer, correctAnswer) {
             const resultContainer = document.getElementById('result-container');
@@ -1964,7 +2140,7 @@
                         </div>
                         <div class="result-title">Правильно!</div>
                         <div class="result-desc">Вы отлично справились с заданием</div>
-                        <div class="result-answer">Ваш ответ: ${userAnswer}</div>
+                        <div class="result-answer">Ваш ответ: ${Array.isArray(userAnswer) ? userAnswer.join(', ') : userAnswer}</div>
                     </div>
                 `;
             } else {
@@ -1975,7 +2151,7 @@
                         </div>
                         <div class="result-title">Неправильно</div>
                         <div class="result-desc">Изучите правило и попробуйте снова</div>
-                        <div class="result-answer">Правильный ответ: ${correctAnswer}</div>
+                        <div class="result-answer">Правильный ответ: ${Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer}</div>
                     </div>
                 `;
             }
@@ -2234,6 +2410,7 @@
             }
             
             saveUserData();
+            renderAchievements();
         }
         
         // Сброс данных пользователя
@@ -2261,8 +2438,62 @@
             showNotification('Ваши данные сброшены', 'info');
         }
         
-        // Админ: добавление задания
-        function addNewTask() {
+        // Заполнение выпадающего списка для редактирования заданий
+        function populateEditTaskSelect() {
+            const select = document.getElementById('admin-edit-task-select');
+            select.innerHTML = '<option value="">Выберите задание...</option>';
+            
+            tasks.forEach(task => {
+                const option = document.createElement('option');
+                option.value = task.id;
+                option.textContent = `#${task.number} - ${task.theme}: ${task.text.substring(0, 50)}${task.text.length > 50 ? '...' : ''}`;
+                select.appendChild(option);
+            });
+        }
+        
+        // Режим редактирования задания
+        function enableEditMode(taskId) {
+            editingTaskId = taskId;
+            const task = tasks.find(t => t.id === taskId);
+            
+            if (!task) return;
+            
+            document.getElementById('admin-task-number').value = task.number;
+            document.getElementById('admin-task-theme').value = task.theme;
+            document.getElementById('admin-task-text').value = task.text.replace(/<[^>]*>/g, '');
+            document.getElementById('admin-task-type').value = task.type;
+            document.getElementById('admin-task-answer').value = Array.isArray(task.answer) ? task.answer.join(', ') : task.answer;
+            document.getElementById('admin-task-hint').value = task.hint || '';
+            
+            if (task.options) {
+                document.getElementById('admin-task-options').value = task.options.join('; ');
+            } else {
+                document.getElementById('admin-task-options').value = '';
+            }
+            
+            document.getElementById('save-task-btn-text').textContent = 'Обновить задание';
+            document.getElementById('delete-task-btn').style.display = 'block';
+        }
+        
+        // Отключение режима редактирования
+        function disableEditMode() {
+            editingTaskId = null;
+            document.getElementById('admin-task-number').value = 1;
+            document.getElementById('admin-task-theme').value = 'Орфография';
+            document.getElementById('admin-task-text').value = '';
+            document.getElementById('admin-task-type').value = 'single';
+            document.getElementById('admin-task-options').value = '';
+            document.getElementById('admin-task-answer').value = '';
+            document.getElementById('admin-task-hint').value = '';
+            document.getElementById('save-task-btn-text').textContent = 'Сохранить задание';
+            document.getElementById('delete-task-btn').style.display = 'none';
+            document.getElementById('admin-edit-mode').value = 'new';
+            document.getElementById('edit-task-select-group').style.display = 'none';
+            document.getElementById('admin-edit-task-select').value = '';
+        }
+        
+        // Админ: добавление/обновление задания
+        function saveTask() {
             const number = parseInt(document.getElementById('admin-task-number').value);
             const theme = document.getElementById('admin-task-theme').value;
             const text = document.getElementById('admin-task-text').value.trim();
@@ -2291,30 +2522,67 @@
                 return;
             }
             
-            const newTask = {
-                id: Date.now(),
-                number: number,
-                theme: theme,
-                text: text,
-                type: type,
-                answer: answer,
-                hint: hint || "Подсказка не предоставлена"
-            };
-            
-            if (type === 'single') {
-                newTask.options = options;
+            if (editingTaskId) {
+                // Редактирование существующего задания
+                const taskIndex = tasks.findIndex(t => t.id === editingTaskId);
+                if (taskIndex !== -1) {
+                    tasks[taskIndex] = {
+                        ...tasks[taskIndex],
+                        number: number,
+                        theme: theme,
+                        text: text,
+                        type: type,
+                        answer: answer,
+                        hint: hint || "Подсказка не предоставлена"
+                    };
+                    
+                    if (type === 'single') {
+                        tasks[taskIndex].options = options;
+                    } else {
+                        delete tasks[taskIndex].options;
+                    }
+                    
+                    showNotification('Задание успешно обновлено!', 'success');
+                }
+            } else {
+                // Добавление нового задания
+                const newTask = {
+                    id: Date.now(),
+                    number: number,
+                    theme: theme,
+                    text: text,
+                    type: type,
+                    answer: answer,
+                    hint: hint || "Подсказка не предоставлена"
+                };
+                
+                if (type === 'single') {
+                    newTask.options = options;
+                }
+                
+                tasks.push(newTask);
+                showNotification('Задание успешно добавлено!', 'success');
             }
             
-            tasks.push(newTask);
             saveTasks();
-            
-            document.getElementById('admin-task-text').value = '';
-            document.getElementById('admin-task-options').value = '';
-            document.getElementById('admin-task-answer').value = '';
-            document.getElementById('admin-task-hint').value = '';
-            
-            showNotification('Задание успешно добавлено!', 'success');
+            disableEditMode();
             renderAdminTasksList();
+        }
+        
+        // Админ: удаление задания
+        function deleteTask() {
+            if (!editingTaskId) return;
+            
+            if (confirm('Вы уверены, что хотите удалить это задание?')) {
+                const taskIndex = tasks.findIndex(t => t.id === editingTaskId);
+                if (taskIndex !== -1) {
+                    tasks.splice(taskIndex, 1);
+                    saveTasks();
+                    showNotification('Задание удалено', 'success');
+                    disableEditMode();
+                    renderAdminTasksList();
+                }
+            }
         }
         
         // Админ: добавление теории
@@ -2359,17 +2627,27 @@
             
             let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
             
-            tasks.slice(-10).reverse().forEach(task => {
+            tasks.slice().reverse().forEach(task => {
                 html += `
-                    <div style="background: var(--bg-secondary); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                        <div style="font-weight: 600; color: var(--accent-primary); margin-bottom: 4px;">
-                            Задание #${task.number} • ${task.theme}
+                    <div class="admin-task-item">
+                        <div class="admin-task-info">
+                            <div class="admin-task-number">
+                                Задание #${task.number} • ${task.theme}
+                            </div>
+                            <div class="admin-task-text">
+                                ${task.text.substring(0, 50)}${task.text.length > 50 ? '...' : ''}
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted);">
+                                Ответ: ${task.answer} | Тип: ${task.type}
+                            </div>
                         </div>
-                        <div style="font-size: 12px; color: var(--text-secondary);">
-                            ${task.text.substring(0, 50)}${task.text.length > 50 ? '...' : ''}
-                        </div>
-                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
-                            Ответ: ${task.answer}
+                        <div class="admin-task-actions">
+                            <button class="admin-task-action-btn edit" data-task-id="${task.id}" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="admin-task-action-btn delete" data-task-id="${task.id}" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -2377,6 +2655,36 @@
             
             html += '</div>';
             container.innerHTML = html;
+            
+            // Добавляем обработчики для кнопок редактирования и удаления
+            container.querySelectorAll('.admin-task-action-btn.edit').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const taskId = parseInt(this.getAttribute('data-task-id'));
+                    enableEditMode(taskId);
+                    document.getElementById('admin-edit-mode').value = 'edit';
+                    document.getElementById('edit-task-select-group').style.display = 'block';
+                    document.getElementById('admin-edit-task-select').value = taskId;
+                });
+            });
+            
+            container.querySelectorAll('.admin-task-action-btn.delete').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const taskId = parseInt(this.getAttribute('data-task-id'));
+                    if (confirm('Вы уверены, что хотите удалить это задание?')) {
+                        const taskIndex = tasks.findIndex(t => t.id === taskId);
+                        if (taskIndex !== -1) {
+                            tasks.splice(taskIndex, 1);
+                            saveTasks();
+                            showNotification('Задание удалено', 'success');
+                            renderAdminTasksList();
+                            
+                            if (editingTaskId === taskId) {
+                                disableEditMode();
+                            }
+                        }
+                    }
+                });
+            });
         }
         
         // Рендеринг списка теории в админке
@@ -2415,16 +2723,23 @@
             }
             
             document.getElementById('admin-panel').classList.add('active');
-            tg.BackButton.show();
+            // Проверяем поддержку BackButton перед использованием
+            if (tg.BackButton && typeof tg.BackButton.show === 'function') {
+                tg.BackButton.show();
+            }
             renderAdminTasksList();
             renderAdminTheoryList();
             document.getElementById('admin-tasks-count').textContent = tasks.length;
+            populateEditTaskSelect();
         }
         
         // Закрыть админ-панель
         function closeAdminPanel() {
             document.getElementById('admin-panel').classList.remove('active');
-            tg.BackButton.hide();
+            if (tg.BackButton && typeof tg.BackButton.hide === 'function') {
+                tg.BackButton.hide();
+            }
+            disableEditMode();
         }
         
         // Показать модальное окно авторизации
@@ -2542,9 +2857,19 @@
             }
         }
         
-        // Уведомления
+        // Уведомления (с проверкой поддержки)
         function showNotification(message, type = 'info') {
-            tg.showAlert(message);
+            try {
+                if (tg.showAlert && typeof tg.showAlert === 'function') {
+                    tg.showAlert(message);
+                } else {
+                    // Fallback для старых версий WebApp
+                    alert(message);
+                }
+            } catch (e) {
+                // Если и это не работает, используем alert
+                alert(message);
+            }
         }
         
         // Настройка обработчиков событий
@@ -2577,7 +2902,8 @@
             
             // Админ-панель
             document.getElementById('close-admin').addEventListener('click', closeAdminPanel);
-            document.getElementById('save-task-btn').addEventListener('click', addNewTask);
+            document.getElementById('save-task-btn').addEventListener('click', saveTask);
+            document.getElementById('delete-task-btn').addEventListener('click', deleteTask);
             document.getElementById('save-theory-btn').addEventListener('click', addNewTheory);
             document.getElementById('clear-theory-btn').addEventListener('click', () => {
                 document.getElementById('admin-theory-title').value = '';
@@ -2590,7 +2916,42 @@
                 btn.addEventListener('click', function() {
                     const tabName = this.getAttribute('data-admin-tab');
                     switchAdminTab(tabName);
+                    if (tabName === 'tasks') {
+                        disableEditMode();
+                    }
                 });
+            });
+            
+            // Режим редактирования
+            document.getElementById('admin-edit-mode').addEventListener('change', function() {
+                const mode = this.value;
+                const editGroup = document.getElementById('edit-task-select-group');
+                
+                if (mode === 'edit') {
+                    editGroup.style.display = 'block';
+                    populateEditTaskSelect();
+                } else {
+                    editGroup.style.display = 'none';
+                    disableEditMode();
+                }
+            });
+            
+            // Выбор задания для редактирования
+            document.getElementById('admin-edit-task-select').addEventListener('change', function() {
+                const taskId = parseInt(this.value);
+                if (taskId) {
+                    enableEditMode(taskId);
+                }
+            });
+            
+            // Тип задания в админке
+            document.getElementById('admin-task-type').addEventListener('change', function() {
+                const optionsGroup = document.getElementById('admin-options-group');
+                if (this.value === 'single' || this.value === 'multiple') {
+                    optionsGroup.style.display = 'block';
+                } else {
+                    optionsGroup.style.display = 'none';
+                }
             });
             
             // Авторизация
@@ -2599,16 +2960,6 @@
             document.getElementById('admin-password').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     checkPassword();
-                }
-            });
-            
-            // Тип задания в админке
-            document.getElementById('admin-task-type').addEventListener('change', function() {
-                const optionsGroup = document.getElementById('admin-options-group');
-                if (this.value === 'single') {
-                    optionsGroup.style.display = 'block';
-                } else {
-                    optionsGroup.style.display = 'none';
                 }
             });
         }
