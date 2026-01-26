@@ -4616,35 +4616,59 @@ function checkPassword() {
 }
 
 // Переключение вкладок
+// Переключение вкладок
 function switchTab(tabName) {
+    // Убираем активный класс со всех кнопок
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('active');
-        if (btn.getAttribute('data-tab') === tabName) {
-            btn.classList.add('active');
-        }
     });
     
+    // Добавляем активный класс выбранной кнопке
+    const activeBtn = document.querySelector(`.nav-btn[data-tab="${tabName}"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+    
+    // Скрываем все вкладки
     document.querySelectorAll('.tab-content').forEach(content => {
         content.classList.remove('active');
     });
-    document.getElementById(`${tabName}-tab`).classList.add('active');
+    
+    // Показываем выбранную вкладку
+    const activeTab = document.getElementById(`${tabName}-tab`);
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
+    
+    // Прокрутка наверх
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
 
 // Переключение вкладок в админ-панели
 function switchAdminTab(tabName) {
+    // Убираем активный класс со всех кнопок
     document.querySelectorAll('.admin-tab').forEach(btn => {
         btn.classList.remove('active');
-        if (btn.getAttribute('data-admin-tab') === tabName) {
-            btn.classList.add('active');
-        }
     });
     
+    // Добавляем активный класс выбранной кнопке
+    const activeBtn = document.querySelector(`.admin-tab[data-admin-tab="${tabName}"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+    
+    // Скрываем все вкладки
     document.querySelectorAll('.admin-content').forEach(content => {
         content.classList.remove('active');
     });
-    document.getElementById(`admin-${tabName}-tab`).classList.add('active');
+    
+    // Показываем выбранную вкладку
+    const activeTab = document.getElementById(`admin-${tabName}-tab`);
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
 }
-
 // Обновление бейджа новых заданий
 function updateNewTasksBadge() {
     const badge = document.getElementById('new-tasks-badge');
@@ -4738,15 +4762,200 @@ function clearCache() {
             }
         }
         
-        // Настройка обработчиков событий
-        function setupEventListeners() {
-            // Навигация
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const tabName = this.getAttribute('data-tab');
-                    switchTab(tabName);
-                });
-            });
+// ==================== EVENT HANDLER FUNCTIONS ====================
+
+// Настройка навигации по вкладкам
+function setupNavigation() {
+    // Делегирование событий для навигации
+    document.querySelector('.nav').addEventListener('click', function(e) {
+        const navBtn = e.target.closest('.nav-btn');
+        if (navBtn) {
+            const tabName = navBtn.getAttribute('data-tab');
+            if (tabName) {
+                switchTab(tabName);
+            }
+        }
+    });
+}
+
+// Настройка кнопок тренировки
+function setupPracticeButtons() {
+    // Обработчики для кнопок в практике
+    document.addEventListener('click', function(e) {
+        // Проверяем, существует ли элемент
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const favoriteBtn = document.getElementById('favorite-btn');
+        
+        if (e.target.closest('#check-btn') && checkBtn) {
+            checkAnswer();
+        }
+        if (e.target.closest('#next-btn') && nextBtn) {
+            showRandomTask();
+        }
+        if (e.target.closest('#hint-btn') && hintBtn) {
+            showHint();
+        }
+        if (e.target.closest('#favorite-btn') && favoriteBtn) {
+            toggleFavorite();
+        }
+        if (e.target.closest('#start-exam-btn')) {
+            if (exams.length > 0) {
+                const randomIndex = Math.floor(Math.random() * exams.length);
+                startExam(exams[randomIndex].id);
+            } else {
+                showNotification('Нет доступных пробников', 'error');
+            }
+        }
+    });
+}
+
+// Настройка кнопок в шапке
+function setupHeaderButtons() {
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#stats-btn')) {
+            switchTab('tasks');
+        }
+        if (e.target.closest('#achievements-btn')) {
+            switchTab('achievements');
+        }
+        if (e.target.closest('#sync-btn')) {
+            forceSync();
+        }
+        if (e.target.closest('#admin-btn')) {
+            showAdminPanel();
+        }
+    });
+}
+
+// Настройка админ-панели
+function setupAdminPanel() {
+    // Закрытие админ-панели
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#close-admin')) {
+            closeAdminPanel();
+        }
+    });
+    
+    // Вкладки админ-панели
+    document.addEventListener('click', function(e) {
+        const adminTab = e.target.closest('.admin-tab');
+        if (adminTab) {
+            const tabName = adminTab.getAttribute('data-admin-tab');
+            switchAdminTab(tabName);
+        }
+    });
+    
+    // Обработчики для кнопок в админ-панели
+    document.addEventListener('click', function(e) {
+        // Кнопки сохранения/удаления
+        if (e.target.closest('#save-task-btn')) {
+            saveTask();
+        }
+        if (e.target.closest('#delete-task-btn')) {
+            deleteTask();
+        }
+        if (e.target.closest('#save-exam-btn')) {
+            saveExam();
+        }
+        if (e.target.closest('#delete-exam-btn')) {
+            deleteExam();
+        }
+        if (e.target.closest('#save-theory-btn')) {
+            saveTheory();
+        }
+        if (e.target.closest('#reset-user-btn')) {
+            resetUserData();
+        }
+        if (e.target.closest('#force-sync-btn')) {
+            forceSync();
+        }
+        if (e.target.closest('#clear-cache-btn')) {
+            clearCache();
+        }
+        if (e.target.closest('#save-bot-settings-btn')) {
+            saveBotSettings();
+        }
+    });
+    
+    // Изменение режимов редактирования
+    document.addEventListener('change', function(e) {
+        if (e.target.id === 'admin-edit-mode') {
+            const editGroup = document.getElementById('edit-task-select-group');
+            editGroup.style.display = e.target.value === 'edit' ? 'block' : 'none';
+            if (e.target.value === 'edit') populateEditTaskSelect();
+        }
+        
+        if (e.target.id === 'admin-exam-edit-mode') {
+            const editGroup = document.getElementById('edit-exam-select-group');
+            editGroup.style.display = e.target.value === 'edit' ? 'block' : 'none';
+            if (e.target.value === 'edit') populateEditExamSelect();
+        }
+        
+        if (e.target.id === 'admin-edit-task-select') {
+            const taskId = parseInt(e.target.value);
+            if (taskId) enableEditMode(taskId);
+        }
+        
+        if (e.target.id === 'admin-edit-exam-select') {
+            const examId = parseInt(e.target.value);
+            if (examId) enableExamEditMode(examId);
+        }
+    });
+}
+
+// Настройка авторизации
+function setupAuthHandlers() {
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#submit-password')) {
+            checkPassword();
+        }
+        if (e.target.closest('#cancel-auth')) {
+            hideAuthModal();
+        }
+    });
+}
+
+// Настройка обработки ввода
+function setupInputHandlers() {
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            // Проверяем, активно ли поле ввода ответа
+            const answerInput = document.getElementById('answer-input');
+            if (answerInput && answerInput.style.display !== 'none' && document.activeElement === answerInput) {
+                checkAnswer();
+            }
+            
+            // Для админ-панели
+            const adminPassword = document.getElementById('admin-password');
+            if (adminPassword && document.activeElement === adminPassword) {
+                checkPassword();
+            }
+        }
+    });
+}
+
+// Настройка обработчиков событий
+function setupEventListeners() {
+    // Навигация по основным вкладкам
+    setupNavigation();
+    
+    // Основные кнопки тренировки
+    setupPracticeButtons();
+    
+    // Кнопки в шапке
+    setupHeaderButtons();
+    
+    // Админ-панель
+    setupAdminPanel();
+    
+    // Авторизация
+    setupAuthHandlers();
+    
+    // Обработка Enter в поле ввода
+    setupInputHandlers();
+}
             
             // Основные кнопки
             document.getElementById('check-btn').addEventListener('click', checkAnswer);
@@ -4815,10 +5024,13 @@ function clearCache() {
             // Авторизация
             document.getElementById('submit-password').addEventListener('click', checkPassword);
             document.getElementById('cancel-auth').addEventListener('click', hideAuthModal);
-        }
+    
         
-        // Запуск приложения
-        document.addEventListener('DOMContentLoaded', initApp);
+// Запуск приложения
+document.addEventListener('DOMContentLoaded', function() {
+    // Небольшая задержка для полной инициализации
+    setTimeout(initApp, 100);
+});
     </script>
 </body>
 </html>
