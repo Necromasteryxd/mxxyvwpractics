@@ -1963,7 +1963,7 @@
     <script>
         // КОНФИГУРАЦИЯ БОТА (ЗАМЕНИТЕ НА СВОИ ДАННЫЕ!)
         const DEFAULT_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"; // Токен от @BotFather
-        const DEFAULT_ADMIN_CHAT_ID = "YOUR_CHAT_ID_HERE"; // Ваш ID из @userinfobot
+        const DEFAULT_ADMIN_CHAT_ID = "1527919061"; // Ваш ID из @userinfobot
         const ADMIN_PASSWORD = "admin123";
         const STORAGE_PREFIX = "ege_russian_";
         
@@ -2057,11 +2057,11 @@
             const savedToken = localStorage.getItem(STORAGE_PREFIX + 'bot_token');
             const savedChatId = localStorage.getItem(STORAGE_PREFIX + 'admin_chat_id');
             
-            if (savedToken && savedToken !== 'YOUR_BOT_TOKEN_HERE') {
+            if (savedToken && savedToken !== '7224974086:AAHEh1nuTy3v4Duifgh6XNIp2MWP7eGbODk') {
                 botToken = savedToken;
             }
             
-            if (savedChatId && savedChatId !== 'YOUR_CHAT_ID_HERE') {
+            if (savedChatId && savedChatId !== '1527919061') {
                 adminChatId = savedChatId;
             }
             
@@ -2073,12 +2073,12 @@
             const token = document.getElementById('bot-token-input').value.trim();
             const chatId = document.getElementById('admin-chat-id-input').value.trim();
             
-            if (token && token !== 'YOUR_BOT_TOKEN_HERE') {
+            if (token && token !== '7224974086:AAHEh1nuTy3v4Duifgh6XNIp2MWP7eGbODk') {
                 botToken = token;
                 localStorage.setItem(STORAGE_PREFIX + 'bot_token', token);
             }
             
-            if (chatId && chatId !== 'YOUR_CHAT_ID_HERE') {
+            if (chatId && chatId !== '1527919061') {
                 adminChatId = chatId;
                 localStorage.setItem(STORAGE_PREFIX + 'admin_chat_id', chatId);
             }
@@ -2091,7 +2091,7 @@
         
         // Сохранение данных в боте
         async function saveDataToBot(key, data) {
-            if (!botToken || botToken === 'YOUR_BOT_TOKEN_HERE' || !adminChatId || adminChatId === 'YOUR_CHAT_ID_HERE') {
+            if (!botToken || botToken === '7224974086:AAHEh1nuTy3v4Duifgh6XNIp2MWP7eGbODk' || !adminChatId || adminChatId === '1527919061') {
                 console.warn('Настройки бота не заданы');
                 return false;
             }
@@ -2121,7 +2121,7 @@
         
         // Загрузка данных из бота
         async function loadDataFromBot(key) {
-            if (!botToken || botToken === 'YOUR_BOT_TOKEN_HERE') {
+            if (!botToken || botToken === '7224974086:AAHEh1nuTy3v4Duifgh6XNIp2MWP7eGbODk') {
                 console.warn('Токен бота не задан');
                 return null;
             }
@@ -2341,7 +2341,7 @@
         
         // Синхронизировать все данные
         async function syncAllData() {
-            if (!botToken || botToken === 'YOUR_BOT_TOKEN_HERE') return;
+            if (!botToken || botToken === '7224974086:AAHEh1nuTy3v4Duifgh6XNIp2MWP7eGbODk') return;
             
             showSyncStatus('Синхронизация...', 'syncing');
             
@@ -2953,6 +2953,658 @@
                 }
             ];
         }
+
+// ==================== EXAM PROCESSING FUNCTIONS ====================
+
+// Рендеринг списка пробников
+function renderExamsList() {
+    const container = document.getElementById('exams-grid');
+    const countElement = document.getElementById('exams-count');
+    
+    if (exams.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <div class="empty-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="empty-title">Нет пробников</div>
+                <p>Администратор добавит варианты для тренировки</p>
+            </div>
+        `;
+        countElement.textContent = '0 вариантов';
+        return;
+    }
+    
+    let html = '';
+    exams.forEach(exam => {
+        const isSolved = stats.solvedExams.includes(exam.id);
+        const score = stats.examScores[exam.id] || 0;
+        const progressPercent = isSolved ? 100 : 0;
+        
+        html += `
+            <div class="exam-variant" data-exam-id="${exam.id}">
+                <div class="exam-variant-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="exam-variant-title">${exam.title}</div>
+                <div class="exam-variant-desc">${exam.description}</div>
+                <div class="exam-variant-progress">
+                    <div class="exam-variant-progress-fill" style="width: ${progressPercent}%"></div>
+                </div>
+                <div class="exam-variant-stats">
+                    <span>${exam.tasksCount} заданий</span>
+                    <span>${exam.time} мин</span>
+                    ${isSolved ? `<span>${score}%</span>` : '<span>Не начат</span>'}
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    countElement.textContent = `${exams.length} вариант${exams.length % 10 === 1 && exams.length % 100 !== 11 ? '' : exams.length % 10 >= 2 && exams.length % 10 <= 4 && (exams.length % 100 < 10 || exams.length % 100 >= 20) ? 'а' : 'ов'}`;
+    
+    // Добавляем обработчики
+    document.querySelectorAll('.exam-variant').forEach(item => {
+        item.addEventListener('click', function() {
+            const examId = parseInt(this.getAttribute('data-exam-id'));
+            startExam(examId);
+        });
+    });
+}
+
+// Обновление бейджа новых пробников
+function updateNewExamsBadge() {
+    const badge = document.getElementById('new-exams-badge');
+    const newExamsCount = exams.length - stats.solvedExams.length;
+    
+    if (newExamsCount > 0) {
+        badge.textContent = newExamsCount > 9 ? '9+' : newExamsCount;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// Начать пробник
+function startExam(examId) {
+    currentExam = exams.find(e => e.id === examId);
+    if (!currentExam) {
+        showNotification('Пробник не найден', 'error');
+        return;
+    }
+    
+    // Собираем задания для пробника
+    currentExamTasks = [];
+    
+    if (currentExam.taskIds && currentExam.taskIds.length > 0) {
+        // Используем указанные ID заданий
+        currentExam.taskIds.forEach(taskId => {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                currentExamTasks.push({
+                    ...task,
+                    examId: examId,
+                    userAnswer: null,
+                    isCorrect: false
+                });
+            }
+        });
+    } else {
+        // Случайный подбор заданий по теме
+        const availableTasks = [...tasks];
+        const shuffledTasks = availableTasks.sort(() => Math.random() - 0.5);
+        
+        for (let i = 0; i < Math.min(currentExam.tasksCount, shuffledTasks.length); i++) {
+            currentExamTasks.push({
+                ...shuffledTasks[i],
+                examId: examId,
+                userAnswer: null,
+                isCorrect: false
+            });
+        }
+    }
+    
+    if (currentExamTasks.length === 0) {
+        showNotification('Нет доступных заданий для этого пробника', 'error');
+        return;
+    }
+    
+    currentExamIndex = 0;
+    examTimeLeft = currentExam.time * 60; // В секундах
+    examCorrectAnswers = 0;
+    examUserAnswers = [];
+    
+    // Создаем контейнер для экрана пробника
+    createExamInterface();
+    
+    // Показываем первый вопрос
+    showExamTask();
+    startExamTimer();
+    
+    showNotification(`Начат пробник: ${currentExam.title}`, 'info');
+}
+
+// Создать интерфейс для пробника
+function createExamInterface() {
+    const practiceTab = document.getElementById('practice-tab');
+    
+    // Сохраняем оригинальный контент
+    if (!practiceTab.dataset.originalContent) {
+        practiceTab.dataset.originalContent = practiceTab.innerHTML;
+    }
+    
+    // Создаем новый интерфейс пробника
+    practiceTab.innerHTML = `
+        <div class="task-card exam">
+            <div class="task-header">
+                <div>
+                    <div class="task-number" id="exam-title">${currentExam.title}</div>
+                    <div class="task-theme" id="exam-progress">Задание 1/${currentExamTasks.length} | Время: ${formatTime(examTimeLeft)}</div>
+                </div>
+                <div class="task-actions">
+                    <button class="action-btn" id="exam-hint-btn" title="Подсказка">
+                        <i class="fas fa-lightbulb"></i>
+                    </button>
+                    <button class="action-btn" id="exam-finish-btn" title="Завершить пробник">
+                        <i class="fas fa-flag-checkered"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="task-text" id="exam-task-text">
+                Загрузка задания...
+            </div>
+            
+            <div id="exam-options-container"></div>
+            
+            <div id="exam-result-container"></div>
+            
+            <input type="text" class="answer-input" id="exam-answer-input" placeholder="Введите ответ..." autocomplete="off" style="display: none;">
+            
+            <div class="buttons-row">
+                <button class="btn btn-primary" id="exam-check-btn">
+                    <i class="fas fa-check"></i>
+                    <span>Проверить</span>
+                </button>
+                <button class="btn btn-secondary" id="exam-next-btn" style="display: none;">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>Следующее</span>
+                </button>
+                <button class="btn btn-exam" id="exam-skip-btn">
+                    <i class="fas fa-forward"></i>
+                    <span>Пропустить</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="task-card">
+            <div class="task-header">
+                <div>
+                    <div class="task-number">Прогресс пробника</div>
+                    <div class="task-theme">${currentExam.title}</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="exam-overall-progress" style="width: 0%"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; color: var(--text-muted); font-size: 13px; margin-top: 8px;">
+                <div>Задания: <span id="exam-done-count">0</span>/${currentExamTasks.length}</div>
+                <div>Верно: <span id="exam-correct-count">0</span></div>
+                <div>Время: <span id="exam-time-left">${formatTime(examTimeLeft)}</span></div>
+            </div>
+        </div>
+    `;
+    
+    // Добавляем обработчики для кнопок пробника
+    document.getElementById('exam-check-btn').addEventListener('click', checkExamAnswer);
+    document.getElementById('exam-next-btn').addEventListener('click', showNextExamTask);
+    document.getElementById('exam-skip-btn').addEventListener('click', skipExamTask);
+    document.getElementById('exam-finish-btn').addEventListener('click', finishExam);
+    document.getElementById('exam-hint-btn').addEventListener('click', showExamHint);
+    
+    // Обработчик ввода по Enter
+    document.getElementById('exam-answer-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkExamAnswer();
+        }
+    });
+    
+    // Переключаемся на вкладку практики
+    switchTab('practice');
+}
+
+// Форматирование времени
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Показать задание из пробника
+function showExamTask() {
+    if (currentExamIndex >= currentExamTasks.length) {
+        finishExam();
+        return;
+    }
+    
+    const examTask = currentExamTasks[currentExamIndex];
+    currentTask = examTask;
+    
+    // Обновляем отображение
+    document.getElementById('exam-title').textContent = currentExam.title;
+    document.getElementById('exam-progress').textContent = 
+        `Задание ${currentExamIndex + 1}/${currentExamTasks.length} | Время: ${formatTime(examTimeLeft)}`;
+    document.getElementById('exam-task-text').innerHTML = currentTask.text;
+    document.getElementById('exam-answer-input').value = '';
+    
+    // Очищаем результат
+    document.getElementById('exam-result-container').innerHTML = '';
+    
+    // Показываем варианты ответов
+    renderExamTaskOptions();
+    
+    // Обновляем прогресс
+    updateExamProgress();
+    
+    // Скрываем кнопку "Следующее", показываем "Проверить"
+    document.getElementById('exam-next-btn').style.display = 'none';
+    document.getElementById('exam-check-btn').style.display = 'flex';
+    document.getElementById('exam-skip-btn').style.display = 'flex';
+}
+
+// Рендеринг вариантов ответов для пробника
+function renderExamTaskOptions() {
+    const container = document.getElementById('exam-options-container');
+    const answerInput = document.getElementById('exam-answer-input');
+    
+    container.innerHTML = '';
+    selectedOptions = {};
+    
+    if (currentTask.options && currentTask.type === 'single') {
+        answerInput.style.display = 'none';
+        
+        currentTask.options.forEach((option, index) => {
+            const optionElement = document.createElement('div');
+            optionElement.className = 'option';
+            if (currentTask.userAnswer === option) {
+                optionElement.classList.add('selected');
+            }
+            optionElement.innerHTML = `
+                <div class="option-marker">${String.fromCharCode(65 + index)}</div>
+                <div class="option-text">${option}</div>
+            `;
+            
+            optionElement.addEventListener('click', () => {
+                // Снимаем выделение со всех вариантов
+                document.querySelectorAll('#exam-options-container .option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Выделяем выбранный вариант
+                optionElement.classList.add('selected');
+                selectedOptions[currentTask.id] = option;
+                currentTask.userAnswer = option;
+            });
+            
+            container.appendChild(optionElement);
+        });
+    } else if (currentTask.type === 'multiple') {
+        answerInput.style.display = 'none';
+        
+        currentTask.options.forEach((option, index) => {
+            const optionElement = document.createElement('div');
+            optionElement.className = 'option';
+            if (Array.isArray(currentTask.userAnswer) && currentTask.userAnswer.includes(option)) {
+                optionElement.classList.add('selected');
+            }
+            optionElement.innerHTML = `
+                <div class="option-marker">${String.fromCharCode(65 + index)}</div>
+                <div class="option-text">${option}</div>
+            `;
+            
+            optionElement.addEventListener('click', () => {
+                // Переключаем выделение для multiple
+                optionElement.classList.toggle('selected');
+                
+                if (!selectedOptions[currentTask.id]) {
+                    selectedOptions[currentTask.id] = [];
+                }
+                
+                const selectedIndex = selectedOptions[currentTask.id].indexOf(option);
+                if (selectedIndex === -1) {
+                    selectedOptions[currentTask.id].push(option);
+                } else {
+                    selectedOptions[currentTask.id].splice(selectedIndex, 1);
+                }
+                
+                currentTask.userAnswer = selectedOptions[currentTask.id];
+            });
+            
+            container.appendChild(optionElement);
+        });
+    } else if (currentTask.type === 'number') {
+        answerInput.style.display = 'block';
+        answerInput.placeholder = "Введите число (например: 5)";
+        answerInput.value = currentTask.userAnswer || '';
+    } else {
+        answerInput.style.display = 'block';
+        answerInput.placeholder = "Введите ответ...";
+        answerInput.value = currentTask.userAnswer || '';
+    }
+}
+
+// Таймер пробника
+function startExamTimer() {
+    if (examTimer) clearInterval(examTimer);
+    
+    examTimer = setInterval(() => {
+        examTimeLeft--;
+        updateExamTimerDisplay();
+        
+        if (examTimeLeft <= 0) {
+            clearInterval(examTimer);
+            showNotification('Время вышло!', 'error');
+            finishExam();
+        }
+    }, 1000);
+}
+
+// Обновить отображение таймера
+function updateExamTimerDisplay() {
+    document.getElementById('exam-progress').textContent = 
+        `Задание ${currentExamIndex + 1}/${currentExamTasks.length} | Время: ${formatTime(examTimeLeft)}`;
+    document.getElementById('exam-time-left').textContent = formatTime(examTimeLeft);
+}
+
+// Обновить прогресс пробника
+function updateExamProgress() {
+    const doneCount = currentExamTasks.filter(task => task.userAnswer !== null).length;
+    const correctCount = currentExamTasks.filter(task => task.isCorrect).length;
+    const progressPercent = (doneCount / currentExamTasks.length) * 100;
+    
+    document.getElementById('exam-overall-progress').style.width = `${progressPercent}%`;
+    document.getElementById('exam-done-count').textContent = doneCount;
+    document.getElementById('exam-correct-count').textContent = correctCount;
+}
+
+// Проверка ответа в пробнике
+function checkExamAnswer() {
+    let userAnswer;
+    
+    if (currentTask.type === 'single' || currentTask.type === 'multiple') {
+        userAnswer = selectedOptions[currentTask.id];
+        if (!userAnswer || (Array.isArray(userAnswer) && userAnswer.length === 0)) {
+            showNotification('Выберите вариант ответа', 'error');
+            return;
+        }
+    } else {
+        userAnswer = document.getElementById('exam-answer-input').value.trim();
+        if (!userAnswer) {
+            showNotification('Введите ответ', 'error');
+            return;
+        }
+    }
+    
+    // Сохраняем ответ пользователя
+    currentTask.userAnswer = userAnswer;
+    
+    // Проверяем правильность
+    let isCorrect = false;
+    
+    if (currentTask.type === 'single') {
+        isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentTask.answer);
+    } else if (currentTask.type === 'multiple') {
+        if (Array.isArray(userAnswer) && Array.isArray(currentTask.answer)) {
+            const userAnswers = userAnswer.map(ans => normalizeAnswer(ans)).sort();
+            const correctAnswers = currentTask.answer.map(ans => normalizeAnswer(ans)).sort();
+            isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+        } else if (typeof currentTask.answer === 'string') {
+            const userAnswers = userAnswer.map(ans => normalizeAnswer(ans)).sort();
+            const correctAnswers = currentTask.answer.split(',').map(ans => normalizeAnswer(ans.trim())).sort();
+            isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+        }
+    } else if (currentTask.type === 'number') {
+        const userNum = parseFloat(userAnswer.replace(',', '.'));
+        const correctNum = parseFloat(currentTask.answer);
+        isCorrect = !isNaN(userNum) && !isNaN(correctNum) && userNum === correctNum;
+    } else {
+        isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentTask.answer);
+    }
+    
+    currentTask.isCorrect = isCorrect;
+    
+    if (isCorrect) {
+        examCorrectAnswers++;
+        showExamResult(true, userAnswer, currentTask.answer);
+    } else {
+        showExamResult(false, userAnswer, currentTask.answer);
+    }
+    
+    // Обновляем прогресс
+    updateExamProgress();
+    
+    // Показываем кнопку "Следующее", скрываем "Проверить"
+    document.getElementById('exam-next-btn').style.display = 'flex';
+    document.getElementById('exam-check-btn').style.display = 'none';
+    document.getElementById('exam-skip-btn').style.display = 'none';
+}
+
+// Показать результат для пробника
+function showExamResult(isCorrect, userAnswer, correctAnswer) {
+    const resultContainer = document.getElementById('exam-result-container');
+    
+    if (isCorrect) {
+        resultContainer.innerHTML = `
+            <div class="result correct">
+                <div class="result-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="result-title">Правильно!</div>
+                <div class="result-desc">Вы отлично справились с этим заданием</div>
+                <div class="result-answer">Ваш ответ: ${Array.isArray(userAnswer) ? userAnswer.join(', ') : userAnswer}</div>
+            </div>
+        `;
+    } else {
+        resultContainer.innerHTML = `
+            <div class="result incorrect">
+                <div class="result-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="result-title">Неправильно</div>
+                <div class="result-desc">Правильный ответ ниже</div>
+                <div class="result-answer">Правильный ответ: ${Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer}</div>
+            </div>
+        `;
+    }
+}
+
+// Показать следующее задание
+function showNextExamTask() {
+    currentExamIndex++;
+    showExamTask();
+}
+
+// Пропустить задание
+function skipExamTask() {
+    if (confirm('Пропустить это задание? К нему можно будет вернуться позже.')) {
+        currentTask.userAnswer = null;
+        currentTask.isCorrect = false;
+        currentExamIndex++;
+        showExamTask();
+    }
+}
+
+// Показать подсказку для пробника
+function showExamHint() {
+    if (!currentTask || !currentTask.hint) {
+        showNotification('Для этого задания нет подсказки', 'info');
+        return;
+    }
+    
+    showNotification(currentTask.hint, 'info');
+}
+
+// Завершить пробник
+function finishExam() {
+    if (examTimer) {
+        clearInterval(examTimer);
+        examTimer = null;
+    }
+    
+    // Подсчитываем финальные результаты
+    const doneTasks = currentExamTasks.filter(task => task.userAnswer !== null);
+    const correctTasks = currentExamTasks.filter(task => task.isCorrect);
+    const score = currentExamTasks.length > 0 ? Math.round((correctTasks.length / currentExamTasks.length) * 100) : 0;
+    
+    // Сохраняем результаты
+    if (currentExam && !stats.solvedExams.includes(currentExam.id)) {
+        stats.solvedExams.push(currentExam.id);
+        stats.examScores[currentExam.id] = score;
+        
+        // Обновляем достижения
+        updateAchievement('exam_master', stats.solvedExams.length);
+        
+        // Добавляем статистику
+        stats.totalAttempts += doneTasks.length;
+        stats.correctAttempts += correctTasks.length;
+        
+        // Добавляем решенные задания
+        correctTasks.forEach(task => {
+            if (!stats.solvedTasks.includes(task.id)) {
+                stats.solvedTasks.push(task.id);
+            }
+        });
+    }
+    
+    // Сохраняем данные
+    saveUserDataToLocalStorage();
+    syncUserDataWithBot();
+    
+    // Показываем результаты
+    showExamResults(score, correctTasks.length, currentExamTasks.length);
+    
+    // Восстанавливаем оригинальный интерфейс
+    restoreOriginalInterface();
+    
+    // Обновляем списки
+    renderExamsList();
+    renderTasksList();
+    updateStatsDisplay();
+    updateNewExamsBadge();
+    
+    // Сбрасываем переменные пробника
+    currentExam = null;
+    currentExamTasks = [];
+    currentExamIndex = 0;
+    examCorrectAnswers = 0;
+}
+
+// Показать результаты пробника
+function showExamResults(score, correctCount, totalCount) {
+    const practiceTab = document.getElementById('practice-tab');
+    const originalContent = practiceTab.dataset.originalContent;
+    
+    // Временно заменяем контент результатами
+    practiceTab.innerHTML = `
+        <div class="task-card exam">
+            <div class="task-header">
+                <div>
+                    <div class="task-number">Результаты пробника</div>
+                    <div class="task-theme">${currentExam?.title || 'Пробник'}</div>
+                </div>
+            </div>
+            
+            <div class="result ${score >= 70 ? 'correct' : 'incorrect'}" style="margin-bottom: 20px;">
+                <div class="result-icon">
+                    <i class="fas ${score >= 70 ? 'fa-trophy' : 'fa-chart-line'}"></i>
+                </div>
+                <div class="result-title">${score >= 70 ? 'Отличный результат!' : 'Есть над чем поработать'}</div>
+                <div class="result-desc">Вы завершили пробник</div>
+                <div class="result-answer" style="font-size: 24px; margin-top: 10px;">${score}%</div>
+            </div>
+            
+            <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--radius-md); margin-bottom: 16px;">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; font-weight: 700; color: var(--success-color);">${correctCount}</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Правильных ответов</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; font-weight: 700; color: var(--error-color);">${totalCount - correctCount}</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Неправильных ответов</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <h3 style="margin-bottom: 12px; font-size: 16px;">Детализация по заданиям:</h3>
+                <div id="exam-detailed-results" style="max-height: 200px; overflow-y: auto; padding: 8px; background: var(--bg-tertiary); border-radius: var(--radius-md);">
+                    <!-- Детальные результаты будут здесь -->
+                </div>
+            </div>
+            
+            <div class="buttons-row">
+                <button class="btn btn-primary" id="exam-review-btn">
+                    <i class="fas fa-redo"></i>
+                    <span>Пройти еще раз</span>
+                </button>
+                <button class="btn btn-secondary" id="exam-back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Вернуться к тренировке</span>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Заполняем детальные результаты
+    const detailedContainer = document.getElementById('exam-detailed-results');
+    let detailedHtml = '';
+    
+    currentExamTasks.forEach((task, index) => {
+        detailedHtml += `
+            <div style="display: flex; align-items: center; padding: 8px; border-bottom: 1px solid var(--border-color);">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: ${task.isCorrect ? 'var(--success-color)' : 'var(--error-color)'}; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                    <i class="fas fa-${task.isCorrect ? 'check' : 'times'}" style="color: white; font-size: 10px;"></i>
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-size: 13px; font-weight: 600;">Задание ${index + 1}</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">
+                        ${task.userAnswer ? `Ваш ответ: ${Array.isArray(task.userAnswer) ? task.userAnswer.join(', ') : task.userAnswer}` : 'Не отвечено'}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    detailedContainer.innerHTML = detailedHtml;
+    
+    // Добавляем обработчики кнопок
+    document.getElementById('exam-review-btn').addEventListener('click', () => {
+        if (currentExam) {
+            startExam(currentExam.id);
+        }
+    });
+    
+    document.getElementById('exam-back-btn').addEventListener('click', () => {
+        restoreOriginalInterface();
+        showRandomTask();
+    });
+}
+
+// Восстановить оригинальный интерфейс
+function restoreOriginalInterface() {
+    const practiceTab = document.getElementById('practice-tab');
+    if (practiceTab.dataset.originalContent) {
+        practiceTab.innerHTML = practiceTab.dataset.originalContent;
+        delete practiceTab.dataset.originalContent;
+        
+        // Восстанавливаем обработчики событий
+        document.getElementById('check-btn').addEventListener('click', checkAnswer);
+        document.getElementById('next-btn').addEventListener('click', showRandomTask);
+        document.getElementById('hint-btn').addEventListener('click', showHint);
+        document.getElementById('favorite-btn').addEventListener('click', toggleFavorite);
+    }
+}
         
         function getInitialTheory() {
             return [
@@ -2999,848 +3651,1081 @@
         
         // ==================== OTHER FUNCTIONS ====================
         
-        // Остальные функции (initTelegram, showRandomTask, checkAnswer, и т.д.)
-        // остаются такими же, как в предыдущем коде, но с добавлением обработки пробников
-          function updateStreakLogic(statsData) {
-            const lastActive = new Date(statsData.lastActive);
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const lastActiveDate = new Date(lastActive.getFullYear(), lastActive.getMonth(), lastActive.getDate());
-            
-            const diffDays = Math.floor((today - lastActiveDate) / (1000 * 60 * 60 * 24));
-            
-            if (diffDays === 0) {
-                // Уже активен сегодня
-                return;
-            } else if (diffDays === 1) {
-                // Продолжаем streak
-                statsData.streak++;
-            } else if (diffDays > 1) {
-                // Сбрасываем streak
-                statsData.streak = 0;
-            }
-            
-            statsData.lastActive = now.toISOString();
-            statsData.lastStreakDate = now.toISOString();
-        }
+// ==================== CORE FUNCTIONS ====================
+
+// Инициализация Telegram WebApp
+function initTelegram() {
+    // Проверяем, доступны ли методы Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    
+    try {
+        tg.expand();
+    } catch (e) {
+        console.log("Telegram expand не поддерживается");
+    }
+    
+    // Получаем ID пользователя
+    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        userId = tg.initDataUnsafe.user.id.toString();
+    } else {
+        // Если не в Telegram, генерируем случайный ID
+        userId = 'web_' + Math.random().toString(36).substr(2, 9);
+    }
+    
+    // Устанавливаем тему Telegram
+    if (tg.colorScheme === 'dark') {
+        document.body.classList.add('theme-dark');
+    }
+}
+
+// Обновление логики streak
+function updateStreakLogic(statsData) {
+    const lastActive = new Date(statsData.lastActive);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const lastActiveDate = new Date(lastActive.getFullYear(), lastActive.getMonth(), lastActive.getDate());
+    
+    const diffDays = Math.floor((today - lastActiveDate) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+        // Уже активен сегодня
+        return;
+    } else if (diffDays === 1) {
+        // Продолжаем streak
+        statsData.streak++;
+    } else if (diffDays > 1) {
+        // Сбрасываем streak
+        statsData.streak = 0;
+    }
+    
+    statsData.lastActive = now.toISOString();
+    statsData.lastStreakDate = now.toISOString();
+}
+
+// Показать случайное задание
+function showRandomTask() {
+    if (tasks.length === 0) {
+        document.getElementById('task-text').textContent = "Нет доступных заданий.";
+        return;
+    }
+    
+    const unsolvedTasks = tasks.filter(task => !stats.solvedTasks.includes(task.id));
+    const availableTasks = unsolvedTasks.length > 0 ? unsolvedTasks : tasks;
+    const randomIndex = Math.floor(Math.random() * availableTasks.length);
+    currentTask = availableTasks[randomIndex];
+    
+    // Обновляем отображение
+    document.getElementById('task-number').textContent = `Задание #${currentTask.number}`;
+    document.getElementById('task-theme').textContent = currentTask.theme;
+    document.getElementById('task-text').innerHTML = currentTask.text;
+    document.getElementById('answer-input').value = '';
+    
+    // Очищаем результат
+    document.getElementById('result-container').innerHTML = '';
+    
+    // Обновляем кнопку избранного
+    updateFavoriteButton();
+    
+    // Показываем варианты ответов или поле ввода
+    renderTaskOptions();
+}
+
+// Рендеринг вариантов ответов
+function renderTaskOptions() {
+    const container = document.getElementById('options-container');
+    const answerInput = document.getElementById('answer-input');
+    
+    container.innerHTML = '';
+    selectedOptions = {};
+    
+    if (currentTask.options && currentTask.type === 'single') {
+        answerInput.style.display = 'none';
         
-        // Показать случайное задание
-        function showRandomTask() {
-            if (tasks.length === 0) {
-                document.getElementById('task-text').textContent = "Нет доступных заданий.";
-                return;
-            }
+        currentTask.options.forEach((option, index) => {
+            const optionElement = document.createElement('div');
+            optionElement.className = 'option';
+            optionElement.innerHTML = `
+                <div class="option-marker">${String.fromCharCode(65 + index)}</div>
+                <div class="option-text">${option}</div>
+            `;
             
-            const randomIndex = Math.floor(Math.random() * tasks.length);
-            currentTask = tasks[randomIndex];
-            
-            // Обновляем отображение
-            document.getElementById('task-number').textContent = `Задание #${currentTask.number}`;
-            document.getElementById('task-theme').textContent = currentTask.theme;
-            document.getElementById('task-text').innerHTML = currentTask.text;
-            document.getElementById('answer-input').value = '';
-            
-            // Очищаем результат
-            document.getElementById('result-container').innerHTML = '';
-            
-            // Обновляем кнопку избранного
-            updateFavoriteButton();
-            
-            // Показываем варианты ответов или поле ввода
-            renderTaskOptions();
-        }
-        
-        // Рендеринг вариантов ответов
-        function renderTaskOptions() {
-            const container = document.getElementById('options-container');
-            const answerInput = document.getElementById('answer-input');
-            
-            container.innerHTML = '';
-            selectedOptions = {};
-            
-            if (currentTask.options && currentTask.type === 'single') {
-                answerInput.style.display = 'none';
-                
-                currentTask.options.forEach((option, index) => {
-                    const optionElement = document.createElement('div');
-                    optionElement.className = 'option';
-                    optionElement.innerHTML = `
-                        <div class="option-marker">${String.fromCharCode(65 + index)}</div>
-                        <div class="option-text">${option}</div>
-                    `;
-                    
-                    optionElement.addEventListener('click', () => {
-                        // Снимаем выделение со всех вариантов
-                        document.querySelectorAll('.option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        
-                        // Выделяем выбранный вариант
-                        optionElement.classList.add('selected');
-                        selectedOptions[currentTask.id] = option;
-                    });
-                    
-                    container.appendChild(optionElement);
-                });
-            } else if (currentTask.type === 'numbers') {
-                answerInput.style.display = 'block';
-                answerInput.placeholder = "Введите цифры через запятую (например: 1,2,3)";
-            } else {
-                answerInput.style.display = 'block';
-                answerInput.placeholder = "Введите ответ...";
-            }
-        }
-        
-        // Проверка ответа
-        function checkAnswer() {
-            let userAnswer;
-            
-            if (currentTask.type === 'single') {
-                userAnswer = selectedOptions[currentTask.id];
-                if (!userAnswer) {
-                    showNotification('Выберите вариант ответа', 'error');
-                    return;
-                }
-            } else {
-                userAnswer = document.getElementById('answer-input').value.trim();
-                if (!userAnswer) {
-                    showNotification('Введите ответ', 'error');
-                    return;
-                }
-            }
-            
-            // Нормализуем ответы для сравнения
-            const normalizedUserAnswer = userAnswer.toString().toLowerCase().replace(/\s+/g, '');
-            const normalizedCorrectAnswer = currentTask.answer.toString().toLowerCase().replace(/\s+/g, '');
-            
-            // Обновляем статистику
-            stats.totalAttempts++;
-            
-            let isCorrect = false;
-            
-            if (currentTask.type === 'numbers') {
-                const userNumbers = normalizedUserAnswer.split(',').map(n => n.trim()).filter(n => n).sort();
-                const correctNumbers = normalizedCorrectAnswer.split('').sort();
-                isCorrect = JSON.stringify(userNumbers) === JSON.stringify(correctNumbers);
-            } else {
-                isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
-            }
-            
-            if (isCorrect) {
-                stats.correctAttempts++;
-                stats.dailyProgress++;
-                
-                // Обновляем streak
-                updateStreakLogic(stats);
-                
-                if (!stats.solvedTasks.includes(currentTask.id)) {
-                    stats.solvedTasks.push(currentTask.id);
-                    updateAchievement('first_blood', 1);
-                    updateAchievement('master', stats.solvedTasks.length);
-                    updateAchievement('perfectionist', stats.solvedTasks.length);
-                    updateAchievement('all_star', stats.solvedTasks.length);
-                    
-                    const uniqueTaskNumbers = [...new Set(stats.solvedTasks.map(id => {
-                        const task = tasks.find(t => t.id === id);
-                        return task ? task.number : null;
-                    }))].filter(n => n).length;
-                    updateAchievement('exam_ready', uniqueTaskNumbers);
-                    
-                    const grammarTasks = stats.solvedTasks.filter(id => {
-                        const task = tasks.find(t => t.id === id);
-                        return task && (task.theme.includes('Орфография') || task.theme.includes('Пунктуация'));
-                    }).length;
-                    updateAchievement('grammar_guru', grammarTasks);
-                    updateAchievement('punctuation_pro', grammarTasks);
-                }
-                
-                showResult(true, userAnswer, currentTask.answer);
-                showNotification('Правильно! Отличная работа!', 'success');
-                
-                if (stats.correctAttempts >= 5 && stats.correctAttempts % 5 === 0) {
-                    updateAchievement('speedrunner', Math.floor(stats.correctAttempts / 5));
-                }
-            } else {
-                showResult(false, userAnswer, currentTask.answer);
-                showNotification('Неправильно. Изучите теорию и попробуйте снова.', 'error');
-            }
-            
-            // Обновляем достижение "Снайпер"
-            const accuracy = stats.totalAttempts > 0 
-                ? Math.round((stats.correctAttempts / stats.totalAttempts) * 100)
-                : 0;
-            updateAchievement('accurate', accuracy);
-            
-            // Обновляем интерфейс
-            updateDailyProgress();
-            updateStreak();
-            saveUserData();
-        }
-        
-        // Показать результат
-        function showResult(isCorrect, userAnswer, correctAnswer) {
-            const resultContainer = document.getElementById('result-container');
-            
-            if (isCorrect) {
-                resultContainer.innerHTML = `
-                    <div class="result correct">
-                        <div class="result-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="result-title">Правильно!</div>
-                        <div class="result-desc">Вы отлично справились с заданием</div>
-                        <div class="result-answer">Ваш ответ: ${userAnswer}</div>
-                    </div>
-                `;
-            } else {
-                resultContainer.innerHTML = `
-                    <div class="result incorrect">
-                        <div class="result-icon">
-                            <i class="fas fa-times-circle"></i>
-                        </div>
-                        <div class="result-title">Неправильно</div>
-                        <div class="result-desc">Изучите правило и попробуйте снова</div>
-                        <div class="result-answer">Правильный ответ: ${correctAnswer}</div>
-                    </div>
-                `;
-            }
-        }
-        
-        // Обновление статистики на экране
-        function updateStatsDisplay() {
-            // Основная статистика
-            document.getElementById('total-tasks').textContent = tasks.length;
-            document.getElementById('solved-count').textContent = stats.solvedTasks.length;
-            
-            const accuracy = stats.totalAttempts > 0 
-                ? Math.round((stats.correctAttempts / stats.totalAttempts) * 100)
-                : 0;
-            document.getElementById('correct-rate').textContent = `${accuracy}%`;
-            
-            // Статистика на вкладке заданий
-            document.getElementById('completed-tasks').textContent = stats.solvedTasks.length;
-            document.getElementById('favorite-tasks').textContent = stats.favoriteTasks.length;
-            document.getElementById('tasks-count').textContent = `${tasks.length} заданий`;
-            
-            // Обновляем счетчик заданий в админке
-            if (isAdminAuthenticated) {
-                document.getElementById('admin-tasks-count').textContent = tasks.length;
-            }
-        }
-        
-        // Обновление ежедневного прогресса
-        function updateDailyProgress() {
-            const progressPercent = Math.min((stats.dailyProgress / 5) * 100, 100);
-            document.getElementById('daily-progress').style.width = `${progressPercent}%`;
-            document.getElementById('daily-solved').textContent = stats.dailyProgress;
-        }
-        
-        // Обновление streak
-        function updateStreak() {
-            document.getElementById('streak-days').textContent = stats.streak;
-            
-            if (stats.dailyProgress >= 5) {
-                document.getElementById('streak-next').textContent = "Выполнено на сегодня!";
-            } else {
-                document.getElementById('streak-next').textContent = `Осталось ${5 - stats.dailyProgress} заданий`;
-            }
-        }
-        
-        // Рендеринг списка заданий
-        function renderTasksList() {
-            const container = document.getElementById('tasks-list-container');
-            
-            if (tasks.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <div class="empty-title">Нет заданий</div>
-                        <p>Начните тренировку!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Группируем задания по темам
-            const tasksByTheme = {};
-            tasks.forEach(task => {
-                if (!tasksByTheme[task.theme]) {
-                    tasksByTheme[task.theme] = [];
-                }
-                tasksByTheme[task.theme].push(task);
-            });
-            
-            // Рендерим задания по темам
-            let html = '';
-            for (const theme in tasksByTheme) {
-                html += `
-                    <div class="task-card" style="margin-top: 12px;">
-                        <div class="task-header">
-                            <div>
-                                <div class="task-number">${theme}</div>
-                                <div class="task-theme">${tasksByTheme[theme].length} заданий</div>
-                            </div>
-                        </div>
-                        <div class="options-container">
-                `;
-                
-                tasksByTheme[theme].forEach(task => {
-                    const isSolved = stats.solvedTasks.includes(task.id);
-                    const isFavorite = stats.favoriteTasks.includes(task.id);
-                    
-                    html += `
-                        <div class="option ${isSolved ? 'selected' : ''}" data-task-id="${task.id}">
-                            <div class="option-marker">${task.number}</div>
-                            <div class="option-text">
-                                ${task.text.substring(0, 60)}${task.text.length > 60 ? '...' : ''}
-                                ${isFavorite ? '<i class="fas fa-star" style="color: var(--warning-color); margin-left: 6px;"></i>' : ''}
-                            </div>
-                            ${isSolved ? '<i class="fas fa-check" style="color: var(--success-color);"></i>' : ''}
-                        </div>
-                    `;
+            optionElement.addEventListener('click', () => {
+                // Снимаем выделение со всех вариантов
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
                 });
                 
-                html += `
-                        </div>
-                    </div>
-                `;
-            }
-            
-            container.innerHTML = html;
-            
-            // Добавляем обработчики клика
-            document.querySelectorAll('.option[data-task-id]').forEach(item => {
-                item.addEventListener('click', function() {
-                    const taskId = parseInt(this.getAttribute('data-task-id'));
-                    const task = tasks.find(t => t.id === taskId);
-                    
-                    if (task) {
-                        switchTab('practice');
-                        currentTask = task;
-                        document.getElementById('task-number').textContent = `Задание #${currentTask.number}`;
-                        document.getElementById('task-theme').textContent = currentTask.theme;
-                        document.getElementById('task-text').innerHTML = currentTask.text;
-                        document.getElementById('answer-input').value = '';
-                        updateFavoriteButton();
-                        renderTaskOptions();
-                        document.getElementById('result-container').innerHTML = '';
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                });
+                // Выделяем выбранный вариант
+                optionElement.classList.add('selected');
+                selectedOptions[currentTask.id] = option;
             });
-        }
+            
+            container.appendChild(optionElement);
+        });
+    } else if (currentTask.type === 'multiple') {
+        answerInput.style.display = 'none';
         
-        // Рендеринг теории
-        function renderTheory() {
-            const container = document.getElementById('theory-content-container');
+        currentTask.options.forEach((option, index) => {
+            const optionElement = document.createElement('div');
+            optionElement.className = 'option';
+            optionElement.innerHTML = `
+                <div class="option-marker">${String.fromCharCode(65 + index)}</div>
+                <div class="option-text">${option}</div>
+            `;
             
-            if (theory.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <div class="empty-title">Теория скоро появится</div>
-                        <p>Администратор добавит материалы для изучения</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '';
-            theory.forEach((section, index) => {
-                html += `
-                    <div class="theory-section">
-                        <div class="theory-header">
-                            <div class="theory-icon">
-                                <i class="fas fa-book-open"></i>
-                            </div>
-                            <div class="theory-title">${section.title}</div>
-                        </div>
-                        <div class="theory-content">
-                            ${section.content}
-                        </div>
-                        <div style="text-align: center; margin-top: 16px;">
-                            <button class="btn btn-secondary practice-theory-btn" data-theme="${section.title.split(':')[0]}">
-                                <i class="fas fa-play-circle"></i>
-                                <span>Потренировать</span>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-            
-            // Добавляем обработчики кнопок тренировки
-            document.querySelectorAll('.practice-theory-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const theme = this.getAttribute('data-theme');
-                    switchTab('practice');
-                    
-                    // Находим задание по теме
-                    const themeTasks = tasks.filter(t => t.theme.includes(theme));
-                    if (themeTasks.length > 0) {
-                        const randomTask = themeTasks[Math.floor(Math.random() * themeTasks.length)];
-                        currentTask = randomTask;
-                        document.getElementById('task-number').textContent = `Задание #${currentTask.number}`;
-                        document.getElementById('task-theme').textContent = currentTask.theme;
-                        document.getElementById('task-text').innerHTML = currentTask.text;
-                        document.getElementById('answer-input').value = '';
-                        updateFavoriteButton();
-                        renderTaskOptions();
-                        document.getElementById('result-container').innerHTML = '';
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                });
-            });
-        }
-        
-        // Рендеринг достижений
-        function renderAchievements() {
-            const container = document.getElementById('achievements-grid');
-            let unlockedCount = 0;
-            let totalCount = 0;
-            
-            let html = '';
-            
-            for (const key in achievements) {
-                const achievement = achievements[key];
-                totalCount++;
+            optionElement.addEventListener('click', () => {
+                // Переключаем выделение для multiple
+                optionElement.classList.toggle('selected');
                 
-                if (achievement.unlocked) {
-                    unlockedCount++;
+                if (!selectedOptions[currentTask.id]) {
+                    selectedOptions[currentTask.id] = [];
                 }
                 
-                const progressPercent = (achievement.progress / achievement.max) * 100;
-                
-                html += `
-                    <div class="achievement ${achievement.unlocked ? 'unlocked' : 'locked'}">
-                        <div class="achievement-badge">
-                            <i class="fas fa-${achievement.unlocked ? 'trophy' : 'lock'}"></i>
-                        </div>
-                        <div class="achievement-title">${achievement.title}</div>
-                        <div class="achievement-desc">${achievement.desc}</div>
-                        ${!achievement.unlocked ? `
-                            <div class="achievement-progress">
-                                <div class="achievement-progress-fill" style="width: ${progressPercent}%"></div>
-                            </div>
-                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">
-                                ${achievement.progress}/${achievement.max}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-            
-            container.innerHTML = html;
-            document.getElementById('achievements-count').textContent = `${unlockedCount}/${totalCount}`;
-        }
-        
-        // Обновление достижений
-        function updateAchievement(key, progress, increment = false) {
-            if (!achievements[key]) return;
-            
-            if (increment) {
-                achievements[key].progress += progress;
-            } else {
-                achievements[key].progress = progress;
-            }
-            
-            if (achievements[key].progress >= achievements[key].max) {
-                achievements[key].progress = achievements[key].max;
-                achievements[key].unlocked = true;
-                
-                if (!increment || progress > 0) {
-                    showNotification(`Новое достижение: ${achievements[key].title}`, 'success');
+                const selectedIndex = selectedOptions[currentTask.id].indexOf(option);
+                if (selectedIndex === -1) {
+                    selectedOptions[currentTask.id].push(option);
+                } else {
+                    selectedOptions[currentTask.id].splice(selectedIndex, 1);
                 }
-            }
+            });
             
-            saveUserData();
+            container.appendChild(optionElement);
+        });
+    } else if (currentTask.type === 'number') {
+        answerInput.style.display = 'block';
+        answerInput.placeholder = "Введите число (например: 5)";
+    } else {
+        answerInput.style.display = 'block';
+        answerInput.placeholder = "Введите ответ...";
+    }
+}
+
+// Проверка ответа
+function checkAnswer() {
+    let userAnswer;
+    
+    if (currentTask.type === 'single' || currentTask.type === 'multiple') {
+        userAnswer = selectedOptions[currentTask.id];
+        if (!userAnswer || (Array.isArray(userAnswer) && userAnswer.length === 0)) {
+            showNotification('Выберите вариант ответа', 'error');
+            return;
+        }
+    } else {
+        userAnswer = document.getElementById('answer-input').value.trim();
+        if (!userAnswer) {
+            showNotification('Введите ответ', 'error');
+            return;
+        }
+    }
+    
+    // Обновляем статистику
+    stats.totalAttempts++;
+    
+    let isCorrect = false;
+    
+    if (currentTask.type === 'single') {
+        // Для одиночного выбора
+        isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentTask.answer);
+    } else if (currentTask.type === 'multiple') {
+        // Для множественного выбора
+        if (Array.isArray(userAnswer) && Array.isArray(currentTask.answer)) {
+            const userAnswers = userAnswer.map(ans => normalizeAnswer(ans)).sort();
+            const correctAnswers = currentTask.answer.map(ans => normalizeAnswer(ans)).sort();
+            isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+        } else if (typeof currentTask.answer === 'string') {
+            const userAnswers = userAnswer.map(ans => normalizeAnswer(ans)).sort();
+            const correctAnswers = currentTask.answer.split(',').map(ans => normalizeAnswer(ans.trim())).sort();
+            isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+        }
+    } else if (currentTask.type === 'number') {
+        // Для числовых ответов
+        const userNum = parseFloat(userAnswer.replace(',', '.'));
+        const correctNum = parseFloat(currentTask.answer);
+        isCorrect = !isNaN(userNum) && !isNaN(correctNum) && userNum === correctNum;
+    } else {
+        // Для текстовых ответов
+        isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentTask.answer);
+    }
+    
+    if (isCorrect) {
+        stats.correctAttempts++;
+        stats.dailyProgress++;
+        
+        // Обновляем streak
+        updateStreakLogic(stats);
+        
+        if (!stats.solvedTasks.includes(currentTask.id)) {
+            stats.solvedTasks.push(currentTask.id);
+            updateAchievement('first_blood', 1);
+            updateAchievement('master', stats.solvedTasks.length);
+            updateAchievement('perfectionist', stats.solvedTasks.length);
+            updateAchievement('all_star', stats.solvedTasks.length);
+            
+            const uniqueTaskNumbers = [...new Set(stats.solvedTasks.map(id => {
+                const task = tasks.find(t => t.id === id);
+                return task ? task.number : null;
+            }))].filter(n => n).length;
+            updateAchievement('exam_ready', uniqueTaskNumbers);
+            
+            const grammarTasks = stats.solvedTasks.filter(id => {
+                const task = tasks.find(t => t.id === id);
+                return task && (task.theme.includes('Орфография') || task.theme.includes('Пунктуация'));
+            }).length;
+            updateAchievement('grammar_guru', grammarTasks);
+            updateAchievement('punctuation_pro', grammarTasks);
         }
         
-        // Сброс данных пользователя
-        function resetUserData() {
-            stats = {
-                totalAttempts: 0,
-                correctAttempts: 0,
-                solvedTasks: [],
-                favoriteTasks: [],
-                lastActive: new Date().toISOString(),
-                streak: 0,
-                lastStreakDate: new Date().toISOString(),
-                dailyProgress: 0,
-                dailyDate: new Date().toISOString().split('T')[0]
-            };
+        showResult(true, userAnswer, currentTask.answer);
+        showNotification('Правильно! Отличная работа!', 'success');
+        
+        if (stats.correctAttempts >= 5 && stats.correctAttempts % 5 === 0) {
+            updateAchievement('speedrunner', Math.floor(stats.correctAttempts / 5));
+        }
+    } else {
+        showResult(false, userAnswer, currentTask.answer);
+        showNotification('Неправильно. Изучите теорию и попробуйте снова.', 'error');
+    }
+    
+    // Обновляем достижение "Снайпер"
+    const accuracy = stats.totalAttempts > 0 
+        ? Math.round((stats.correctAttempts / stats.totalAttempts) * 100)
+        : 0;
+    updateAchievement('accurate', accuracy);
+    
+    // Обновляем интерфейс
+    updateDailyProgress();
+    updateStreak();
+    saveUserDataToLocalStorage();
+    syncUserDataWithBot();
+}
+
+// Нормализация ответа для сравнения
+function normalizeAnswer(answer) {
+    if (Array.isArray(answer)) {
+        return answer.map(item => item.toString().toLowerCase().trim()).sort().join(',');
+    }
+    return answer.toString().toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
+// Показать результат
+function showResult(isCorrect, userAnswer, correctAnswer) {
+    const resultContainer = document.getElementById('result-container');
+    
+    if (isCorrect) {
+        resultContainer.innerHTML = `
+            <div class="result correct">
+                <div class="result-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="result-title">Правильно!</div>
+                <div class="result-desc">Вы отлично справились с заданием</div>
+                <div class="result-answer">Ваш ответ: ${Array.isArray(userAnswer) ? userAnswer.join(', ') : userAnswer}</div>
+            </div>
+        `;
+    } else {
+        resultContainer.innerHTML = `
+            <div class="result incorrect">
+                <div class="result-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="result-title">Неправильно</div>
+                <div class="result-desc">Изучите правило и попробуйте снова</div>
+                <div class="result-answer">Правильный ответ: ${Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer}</div>
+            </div>
+        `;
+    }
+}
+
+// Обновление статистики на экране
+function updateStatsDisplay() {
+    // Основная статистика
+    document.getElementById('total-tasks').textContent = tasks.length;
+    document.getElementById('solved-count').textContent = stats.solvedTasks.length;
+    
+    const accuracy = stats.totalAttempts > 0 
+        ? Math.round((stats.correctAttempts / stats.totalAttempts) * 100)
+        : 0;
+    document.getElementById('correct-rate').textContent = `${accuracy}%`;
+    
+    // Статистика на вкладке заданий
+    document.getElementById('completed-tasks').textContent = stats.solvedTasks.length;
+    document.getElementById('favorite-tasks').textContent = stats.favoriteTasks.length;
+    document.getElementById('tasks-count').textContent = `${tasks.length} заданий`;
+    
+    // Обновляем счетчик заданий в админке
+    if (isAdminAuthenticated) {
+        document.getElementById('admin-tasks-count').textContent = tasks.length;
+        document.getElementById('admin-exams-count').textContent = exams.length;
+    }
+}
+
+// Обновление ежедневного прогресса
+function updateDailyProgress() {
+    const progressPercent = Math.min((stats.dailyProgress / 5) * 100, 100);
+    document.getElementById('daily-progress').style.width = `${progressPercent}%`;
+    document.getElementById('daily-solved').textContent = stats.dailyProgress;
+}
+
+// Обновление streak
+function updateStreak() {
+    document.getElementById('streak-days').textContent = stats.streak;
+    
+    if (stats.dailyProgress >= 5) {
+        document.getElementById('streak-next').textContent = "Выполнено на сегодня!";
+    } else {
+        document.getElementById('streak-next').textContent = `Осталось ${5 - stats.dailyProgress} заданий`;
+    }
+}
+
+// Рендеринг списка заданий
+function renderTasksList() {
+    const container = document.getElementById('tasks-list-container');
+    
+    if (tasks.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="empty-title">Нет заданий</div>
+                <p>Начните тренировку!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Группируем задания по темам
+    const tasksByTheme = {};
+    tasks.forEach(task => {
+        if (!tasksByTheme[task.theme]) {
+            tasksByTheme[task.theme] = [];
+        }
+        tasksByTheme[task.theme].push(task);
+    });
+    
+    // Рендерим задания по темам
+    let html = '';
+    for (const theme in tasksByTheme) {
+        html += `
+            <div class="task-card" style="margin-top: 12px;">
+                <div class="task-header">
+                    <div>
+                        <div class="task-number">${theme}</div>
+                        <div class="task-theme">${tasksByTheme[theme].length} заданий</div>
+                    </div>
+                </div>
+                <div class="options-container">
+        `;
+        
+        tasksByTheme[theme].forEach(task => {
+            const isSolved = stats.solvedTasks.includes(task.id);
+            const isFavorite = stats.favoriteTasks.includes(task.id);
             
-            achievements = getInitialAchievements();
+            html += `
+                <div class="option ${isSolved ? 'selected' : ''}" data-task-id="${task.id}">
+                    <div class="option-marker">${task.number}</div>
+                    <div class="option-text">
+                        ${task.text.substring(0, 60)}${task.text.length > 60 ? '...' : ''}
+                        ${isFavorite ? '<i class="fas fa-star" style="color: var(--warning-color); margin-left: 6px;"></i>' : ''}
+                    </div>
+                    ${isSolved ? '<i class="fas fa-check" style="color: var(--success-color);"></i>' : ''}
+                </div>
+            `;
+        });
+        
+        html += `
+                </div>
+            </div>
+        `;
+    }
+    
+    container.innerHTML = html;
+    
+    // Добавляем обработчики клика
+    document.querySelectorAll('.option[data-task-id]').forEach(item => {
+        item.addEventListener('click', function() {
+            const taskId = parseInt(this.getAttribute('data-task-id'));
+            const task = tasks.find(t => t.id === taskId);
             
-            saveUserData();
-            updateStatsDisplay();
-            updateDailyProgress();
-            updateStreak();
-            renderAchievements();
+            if (task) {
+                switchTab('practice');
+                currentTask = task;
+                document.getElementById('task-number').textContent = `Задание #${currentTask.number}`;
+                document.getElementById('task-theme').textContent = currentTask.theme;
+                document.getElementById('task-text').innerHTML = currentTask.text;
+                document.getElementById('answer-input').value = '';
+                updateFavoriteButton();
+                renderTaskOptions();
+                document.getElementById('result-container').innerHTML = '';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    });
+}
+
+// Рендеринг теории
+function renderTheory() {
+    const container = document.getElementById('theory-content-container');
+    
+    if (theory.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="empty-title">Теория скоро появится</div>
+                <p>Администратор добавит материалы для изучения</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    theory.forEach((section, index) => {
+        html += `
+            <div class="theory-section">
+                <div class="theory-header">
+                    <div class="theory-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="theory-title">${section.title}</div>
+                </div>
+                <div class="theory-content">
+                    ${section.content}
+                </div>
+                <div style="text-align: center; margin-top: 16px;">
+                    <button class="btn btn-secondary practice-theory-btn" data-theme="${section.title.split(':')[0]}">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Потренировать</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    
+    // Добавляем обработчики кнопок тренировки
+    document.querySelectorAll('.practice-theory-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const theme = this.getAttribute('data-theme');
+            switchTab('practice');
             
-            showNotification('Ваши данные сброшены', 'info');
+            // Находим задание по теме
+            const themeTasks = tasks.filter(t => t.theme.includes(theme));
+            if (themeTasks.length > 0) {
+                const randomTask = themeTasks[Math.floor(Math.random() * themeTasks.length)];
+                currentTask = randomTask;
+                document.getElementById('task-number').textContent = `Задание #${currentTask.number}`;
+                document.getElementById('task-theme').textContent = currentTask.theme;
+                document.getElementById('task-text').innerHTML = currentTask.text;
+                document.getElementById('answer-input').value = '';
+                updateFavoriteButton();
+                renderTaskOptions();
+                document.getElementById('result-container').innerHTML = '';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    });
+}
+
+// Рендеринг достижений
+function renderAchievements() {
+    const container = document.getElementById('achievements-grid');
+    let unlockedCount = 0;
+    let totalCount = 0;
+    
+    let html = '';
+    
+    for (const key in achievements) {
+        const achievement = achievements[key];
+        totalCount++;
+        
+        if (achievement.unlocked) {
+            unlockedCount++;
         }
         
-        // Админ: добавление задания
-        function addNewTask() {
-            const number = parseInt(document.getElementById('admin-task-number').value);
-            const theme = document.getElementById('admin-task-theme').value;
-            const text = document.getElementById('admin-task-text').value.trim();
-            const type = document.getElementById('admin-task-type').value;
-            const options = document.getElementById('admin-task-options').value.split(';').map(opt => opt.trim()).filter(opt => opt);
-            const answer = document.getElementById('admin-task-answer').value.trim();
-            const hint = document.getElementById('admin-task-hint').value.trim();
-            
-            if (!text) {
-                showNotification('Введите текст задания', 'error');
-                return;
-            }
-            
-            if (!answer) {
-                showNotification('Введите правильный ответ', 'error');
-                return;
-            }
-            
-            if (number < 1 || number > 27) {
-                showNotification('Номер задания должен быть от 1 до 27', 'error');
-                return;
-            }
-            
-            if (type === 'single' && options.length < 2) {
-                showNotification('Добавьте минимум 2 варианта ответа', 'error');
-                return;
-            }
-            
-            const newTask = {
-                id: Date.now(),
+        const progressPercent = (achievement.progress / achievement.max) * 100;
+        
+        html += `
+            <div class="achievement ${achievement.unlocked ? 'unlocked' : 'locked'}">
+                <div class="achievement-badge">
+                    <i class="fas fa-${achievement.unlocked ? 'trophy' : 'lock'}"></i>
+                </div>
+                <div class="achievement-title">${achievement.title}</div>
+                <div class="achievement-desc">${achievement.desc}</div>
+                ${!achievement.unlocked ? `
+                    <div class="achievement-progress">
+                        <div class="achievement-progress-fill" style="width: ${progressPercent}%"></div>
+                    </div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">
+                        ${achievement.progress}/${achievement.max}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+    
+    container.innerHTML = html;
+    document.getElementById('achievements-count').textContent = `${unlockedCount}/${totalCount}`;
+}
+
+// Обновление достижений
+function updateAchievement(key, progress, increment = false) {
+    if (!achievements[key]) return;
+    
+    if (increment) {
+        achievements[key].progress += progress;
+    } else {
+        achievements[key].progress = progress;
+    }
+    
+    if (achievements[key].progress >= achievements[key].max) {
+        achievements[key].progress = achievements[key].max;
+        achievements[key].unlocked = true;
+        
+        if (!increment || progress > 0) {
+            showNotification(`Новое достижение: ${achievements[key].title}`, 'success');
+        }
+    }
+    
+    saveUserDataToLocalStorage();
+    renderAchievements();
+}
+
+// Сброс данных пользователя
+function resetUserData() {
+    if (confirm('Вы уверены, что хотите сбросить все ваши данные? Прогресс будет утерян.')) {
+        stats = {
+            totalAttempts: 0,
+            correctAttempts: 0,
+            solvedTasks: [],
+            favoriteTasks: [],
+            solvedExams: [],
+            examScores: {},
+            lastActive: new Date().toISOString(),
+            streak: 0,
+            lastStreakDate: new Date().toISOString(),
+            dailyProgress: 0,
+            dailyDate: new Date().toISOString().split('T')[0]
+        };
+        
+        achievements = getInitialAchievements();
+        
+        saveUserDataToLocalStorage();
+        syncUserDataWithBot();
+        
+        updateStatsDisplay();
+        updateDailyProgress();
+        updateStreak();
+        renderAchievements();
+        
+        showNotification('Ваши данные сброшены', 'info');
+    }
+}
+
+// Заполнение выпадающего списка для редактирования заданий
+function populateEditTaskSelect() {
+    const select = document.getElementById('admin-edit-task-select');
+    select.innerHTML = '<option value="">Выберите задание...</option>';
+    
+    tasks.forEach(task => {
+        const option = document.createElement('option');
+        option.value = task.id;
+        option.textContent = `#${task.number} - ${task.theme}: ${task.text.substring(0, 50)}${task.text.length > 50 ? '...' : ''}`;
+        select.appendChild(option);
+    });
+}
+
+// Режим редактирования задания
+function enableEditMode(taskId) {
+    editingTaskId = taskId;
+    const task = tasks.find(t => t.id === taskId);
+    
+    if (!task) return;
+    
+    document.getElementById('admin-task-number').value = task.number;
+    document.getElementById('admin-task-theme').value = task.theme;
+    document.getElementById('admin-task-text').value = task.text.replace(/<[^>]*>/g, '');
+    document.getElementById('admin-task-type').value = task.type;
+    document.getElementById('admin-task-answer').value = Array.isArray(task.answer) ? task.answer.join(', ') : task.answer;
+    document.getElementById('admin-task-hint').value = task.hint || '';
+    
+    if (task.options) {
+        document.getElementById('admin-task-options').value = task.options.join('; ');
+    } else {
+        document.getElementById('admin-task-options').value = '';
+    }
+    
+    document.getElementById('save-task-btn-text').textContent = 'Обновить задание';
+    document.getElementById('delete-task-btn').style.display = 'block';
+}
+
+// Отключение режима редактирования
+function disableEditMode() {
+    editingTaskId = null;
+    document.getElementById('admin-task-number').value = 1;
+    document.getElementById('admin-task-theme').value = 'Орфография';
+    document.getElementById('admin-task-text').value = '';
+    document.getElementById('admin-task-type').value = 'single';
+    document.getElementById('admin-task-options').value = '';
+    document.getElementById('admin-task-answer').value = '';
+    document.getElementById('admin-task-hint').value = '';
+    document.getElementById('save-task-btn-text').textContent = 'Сохранить задание';
+    document.getElementById('delete-task-btn').style.display = 'none';
+    document.getElementById('admin-edit-mode').value = 'new';
+    document.getElementById('edit-task-select-group').style.display = 'none';
+    document.getElementById('admin-edit-task-select').value = '';
+}
+
+// Админ: добавление/обновление задания
+async function saveTask() {
+    const number = parseInt(document.getElementById('admin-task-number').value);
+    const theme = document.getElementById('admin-task-theme').value;
+    const text = document.getElementById('admin-task-text').value.trim();
+    const type = document.getElementById('admin-task-type').value;
+    const options = document.getElementById('admin-task-options').value.split(';').map(opt => opt.trim()).filter(opt => opt);
+    const answer = document.getElementById('admin-task-answer').value.trim();
+    const hint = document.getElementById('admin-task-hint').value.trim();
+    
+    if (!text) {
+        showNotification('Введите текст задания', 'error');
+        return;
+    }
+    
+    if (!answer) {
+        showNotification('Введите правильный ответ', 'error');
+        return;
+    }
+    
+    if (number < 1 || number > 27) {
+        showNotification('Номер задания должен быть от 1 до 27', 'error');
+        return;
+    }
+    
+    if ((type === 'single' || type === 'multiple') && options.length < 2) {
+        showNotification('Добавьте минимум 2 варианта ответа', 'error');
+        return;
+    }
+    
+    if (editingTaskId) {
+        // Редактирование существующего задания
+        const taskIndex = tasks.findIndex(t => t.id === editingTaskId);
+        if (taskIndex !== -1) {
+            tasks[taskIndex] = {
+                ...tasks[taskIndex],
                 number: number,
                 theme: theme,
                 text: text,
                 type: type,
-                answer: answer,
-                hint: hint || "Подсказка не предоставлена"
+                answer: type === 'multiple' ? answer.split(',').map(a => a.trim()) : answer,
+                hint: hint || "Подсказка не предоставлена",
+                updatedAt: Date.now()
             };
             
-            if (type === 'single') {
-                newTask.options = options;
+            if (type === 'single' || type === 'multiple') {
+                tasks[taskIndex].options = options;
+            } else {
+                delete tasks[taskIndex].options;
             }
             
-            tasks.push(newTask);
-            saveTasks();
+            showNotification('Задание успешно обновлено!', 'success');
+        }
+    } else {
+        // Добавление нового задания
+        const newTask = {
+            id: Date.now(),
+            number: number,
+            theme: theme,
+            text: text,
+            type: type,
+            answer: type === 'multiple' ? answer.split(',').map(a => a.trim()) : answer,
+            hint: hint || "Подсказка не предоставлена",
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+        };
+        
+        if (type === 'single' || type === 'multiple') {
+            newTask.options = options;
+        }
+        
+        tasks.push(newTask);
+        showNotification('Задание успешно добавлено!', 'success');
+    }
+    
+    // Сохраняем локально
+    saveTasksToLocalStorage();
+    
+    // Синхронизируем с ботом
+    const syncSuccess = await saveTasksToBot();
+    
+    if (syncSuccess) {
+        // Обновляем интерфейс
+        updateStatsDisplay();
+        renderTasksList();
+        updateNewTasksBadge();
+        renderAdminTasksList();
+        populateEditTaskSelect();
+        disableEditMode();
+    }
+}
+
+// Удаление задания
+async function deleteTask() {
+    if (!editingTaskId) return;
+    
+    if (confirm('Вы уверены, что хотите удалить это задание? Все пользователи потеряют доступ к нему.')) {
+        const taskIndex = tasks.findIndex(t => t.id === editingTaskId);
+        if (taskIndex !== -1) {
+            // Удаляем локально
+            tasks.splice(taskIndex, 1);
+            saveTasksToLocalStorage();
             
-            document.getElementById('admin-task-text').value = '';
-            document.getElementById('admin-task-options').value = '';
-            document.getElementById('admin-task-answer').value = '';
-            document.getElementById('admin-task-hint').value = '';
+            // Удаляем из бота
+            const deleteSuccess = await deleteDataFromBot('tasks', editingTaskId);
             
-            showNotification('Задание успешно добавлено!', 'success');
+            if (deleteSuccess) {
+                showNotification('Задание удалено у всех пользователей', 'success');
+            } else {
+                // Если не удалось удалить из бота, всё равно сохраняем изменения локально
+                await saveTasksToBot();
+                showNotification('Задание удалено', 'success');
+            }
+            
+            // Обновляем интерфейс
+            updateStatsDisplay();
+            renderTasksList();
+            updateNewTasksBadge();
             renderAdminTasksList();
+            disableEditMode();
         }
+    }
+}
+
+// Сохранение теории
+async function saveTheory() {
+    const title = document.getElementById('admin-theory-title').value.trim();
+    const content = document.getElementById('admin-theory-content').value.trim();
+    
+    if (!title) {
+        showNotification('Введите название раздела', 'error');
+        return;
+    }
+    
+    if (!content) {
+        showNotification('Введите содержание раздела', 'error');
+        return;
+    }
+    
+    const newTheory = {
+        id: Date.now(),
+        title: title,
+        content: content,
+        createdAt: Date.now()
+    };
+    
+    theory.push(newTheory);
+    
+    // Сохраняем локально
+    saveTheoryToLocalStorage();
+    
+    // Синхронизируем с ботом
+    const syncSuccess = await saveTheoryToBot();
+    
+    if (syncSuccess) {
+        showNotification('Раздел теории успешно добавлен!', 'success');
+        renderTheory();
+        renderAdminTheoryList();
         
-        // Админ: добавление теории
-        function addNewTheory() {
-            const title = document.getElementById('admin-theory-title').value.trim();
-            const content = document.getElementById('admin-theory-content').value.trim();
-            
-            if (!title) {
-                showNotification('Введите название раздела', 'error');
-                return;
-            }
-            
-            if (!content) {
-                showNotification('Введите содержание раздела', 'error');
-                return;
-            }
-            
-            const newTheory = {
-                id: Date.now(),
-                title: title,
-                content: content
-            };
-            
-            theory.push(newTheory);
-            saveTheory();
-            
-            document.getElementById('admin-theory-title').value = '';
-            document.getElementById('admin-theory-content').value = '';
-            
-            showNotification('Раздел теории успешно добавлен!', 'success');
-            renderAdminTheoryList();
-        }
-        
-        // Рендеринг списка заданий в админке
-        function renderAdminTasksList() {
-            const container = document.getElementById('admin-tasks-list');
-            
-            if (tasks.length === 0) {
-                container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Нет заданий</div>';
-                return;
-            }
-            
-            let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
-            
-            tasks.slice(-10).reverse().forEach(task => {
-                html += `
-                    <div style="background: var(--bg-secondary); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                        <div style="font-weight: 600; color: var(--accent-primary); margin-bottom: 4px;">
-                            Задание #${task.number} • ${task.theme}
-                        </div>
-                        <div style="font-size: 12px; color: var(--text-secondary);">
-                            ${task.text.substring(0, 50)}${task.text.length > 50 ? '...' : ''}
-                        </div>
-                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
-                            Ответ: ${task.answer}
-                        </div>
+        document.getElementById('admin-theory-title').value = '';
+        document.getElementById('admin-theory-content').value = '';
+    }
+}
+
+// Рендеринг списка заданий в админке
+function renderAdminTasksList() {
+    const container = document.getElementById('admin-tasks-list');
+    
+    if (tasks.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Нет заданий</div>';
+        return;
+    }
+    
+    let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+    
+    tasks.slice().reverse().forEach(task => {
+        html += `
+            <div class="admin-task-item">
+                <div class="admin-task-info">
+                    <div class="admin-task-number">
+                        Задание #${task.number} • ${task.theme}
                     </div>
-                `;
-            });
-            
-            html += '</div>';
-            container.innerHTML = html;
-        }
-        
-        // Рендеринг списка теории в админке
-        function renderAdminTheoryList() {
-            const container = document.getElementById('admin-theory-list');
-            
-            if (theory.length === 0) {
-                container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Нет разделов теории</div>';
-                return;
-            }
-            
-            let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
-            
-            theory.slice(-10).reverse().forEach(section => {
-                html += `
-                    <div style="background: var(--bg-secondary); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                        <div style="font-weight: 600; color: var(--accent-primary); margin-bottom: 4px;">
-                            ${section.title}
-                        </div>
-                        <div style="font-size: 12px; color: var(--text-secondary);">
-                            ${section.content.substring(0, 80)}${section.content.length > 80 ? '...' : ''}
-                        </div>
+                    <div class="admin-task-text">
+                        ${task.text.substring(0, 50)}${task.text.length > 50 ? '...' : ''}
                     </div>
-                `;
-            });
-            
-            html += '</div>';
-            container.innerHTML = html;
-        }
-        
-        // Показать админ-панель
-        function showAdminPanel() {
-            if (!isAdminAuthenticated) {
-                showAuthModal();
-                return;
-            }
-            
-            document.getElementById('admin-panel').classList.add('active');
-            tg.BackButton.show();
-            renderAdminTasksList();
-            renderAdminTheoryList();
-            document.getElementById('admin-tasks-count').textContent = tasks.length;
-        }
-        
-        // Закрыть админ-панель
-        function closeAdminPanel() {
-            document.getElementById('admin-panel').classList.remove('active');
-            tg.BackButton.hide();
-        }
-        
-        // Показать модальное окно авторизации
-        function showAuthModal() {
-            document.getElementById('auth-modal').classList.add('active');
-            document.getElementById('admin-password').focus();
-            document.getElementById('auth-error').textContent = '';
-        }
-        
-        // Скрыть модальное окно авторизации
-        function hideAuthModal() {
-            document.getElementById('auth-modal').classList.remove('active');
-            document.getElementById('admin-password').value = '';
-        }
-        
-        // Проверка пароля
-        function checkPassword() {
-            const password = document.getElementById('admin-password').value;
-            
-            if (password === ADMIN_PASSWORD) {
-                isAdminAuthenticated = true;
-                hideAuthModal();
-                showAdminPanel();
-                showNotification('Доступ к админ-панели разрешен', 'success');
-            } else {
-                document.getElementById('auth-error').textContent = 'Неверный пароль';
-                document.getElementById('admin-password').value = '';
-                document.getElementById('admin-password').focus();
-            }
-        }
-        
-        // Переключение вкладок
-        function switchTab(tabName) {
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.getAttribute('data-tab') === tabName) {
-                    btn.classList.add('active');
+                    <div style="font-size: 11px; color: var(--text-muted);">
+                        Ответ: ${task.answer} | Тип: ${task.type}
+                    </div>
+                </div>
+                <div class="admin-task-actions">
+                    <button class="admin-task-action-btn edit" data-task-id="${task.id}" title="Редактировать">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="admin-task-action-btn delete" data-task-id="${task.id}" title="Удалить">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+    
+    // Добавляем обработчики для кнопок редактирования и удаления
+    container.querySelectorAll('.admin-task-action-btn.edit').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const taskId = parseInt(this.getAttribute('data-task-id'));
+            enableEditMode(taskId);
+            document.getElementById('admin-edit-mode').value = 'edit';
+            document.getElementById('edit-task-select-group').style.display = 'block';
+            document.getElementById('admin-edit-task-select').value = taskId;
+        });
+    });
+    
+    container.querySelectorAll('.admin-task-action-btn.delete').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const taskId = parseInt(this.getAttribute('data-task-id'));
+            if (confirm('Вы уверены, что хотите удалить это задание?')) {
+                const taskIndex = tasks.findIndex(t => t.id === taskId);
+                if (taskIndex !== -1) {
+                    tasks.splice(taskIndex, 1);
+                    saveTasksToLocalStorage();
+                    saveTasksToBot();
+                    showNotification('Задание удалено', 'success');
+                    renderAdminTasksList();
+                    
+                    if (editingTaskId === taskId) {
+                        disableEditMode();
+                    }
                 }
-            });
-            
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(`${tabName}-tab`).classList.add('active');
-        }
-        
-        // Переключение вкладок в админ-панели
-        function switchAdminTab(tabName) {
-            document.querySelectorAll('.admin-tab').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.getAttribute('data-admin-tab') === tabName) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            document.querySelectorAll('.admin-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(`admin-${tabName}-tab`).classList.add('active');
-        }
-        
-        // Обновление бейджа новых заданий
-        function updateNewTasksBadge() {
-            const badge = document.getElementById('new-tasks-badge');
-            const newTasksCount = tasks.length - stats.solvedTasks.length;
-            
-            if (newTasksCount > 0) {
-                badge.textContent = newTasksCount > 9 ? '9+' : newTasksCount;
-                badge.style.display = 'flex';
-            } else {
-                badge.style.display = 'none';
             }
+        });
+    });
+}
+
+// Рендеринг списка теории в админке
+function renderAdminTheoryList() {
+    const container = document.getElementById('admin-theory-list');
+    
+    if (theory.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Нет разделов теории</div>';
+        return;
+    }
+    
+    let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+    
+    theory.slice(-10).reverse().forEach(section => {
+        html += `
+            <div style="background: var(--bg-secondary); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <div style="font-weight: 600; color: var(--accent-primary); margin-bottom: 4px;">
+                    ${section.title}
+                </div>
+                <div style="font-size: 12px; color: var(--text-secondary);">
+                    ${section.content.substring(0, 80)}${section.content.length > 80 ? '...' : ''}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Обновление статистики пользователей в админ-панели
+function updateAdminUsersStats(usersData) {
+    document.getElementById('total-users').textContent = usersData.length;
+    
+    const today = new Date().toISOString().split('T')[0];
+    const activeToday = usersData.filter(user => {
+        return user.lastActive && user.lastActive.startsWith(today);
+    }).length;
+    
+    document.getElementById('active-today').textContent = activeToday;
+}
+
+// Показать админ-панель
+async function showAdminPanel() {
+    if (!isAdminAuthenticated) {
+        showAuthModal();
+        return;
+    }
+    
+    document.getElementById('admin-panel').classList.add('active');
+    
+    // Загружаем актуальные данные пользователей для статистики
+    try {
+        const usersData = await loadDataFromBot('users') || [];
+        updateAdminUsersStats(usersData);
+    } catch (error) {
+        console.error('Ошибка загрузки статистики пользователей:', error);
+    }
+    
+    renderAdminTasksList();
+    renderAdminExamsList();
+    renderAdminTheoryList();
+    document.getElementById('admin-tasks-count').textContent = tasks.length;
+    populateEditTaskSelect();
+    populateEditExamSelect();
+}
+
+// Закрыть админ-панель
+function closeAdminPanel() {
+    document.getElementById('admin-panel').classList.remove('active');
+    disableEditMode();
+    disableExamEditMode();
+}
+
+// Показать модальное окно авторизации
+function showAuthModal() {
+    document.getElementById('auth-modal').classList.add('active');
+    document.getElementById('admin-password').focus();
+    document.getElementById('auth-error').textContent = '';
+}
+
+// Скрыть модальное окно авторизации
+function hideAuthModal() {
+    document.getElementById('auth-modal').classList.remove('active');
+    document.getElementById('admin-password').value = '';
+}
+
+// Проверка пароля
+function checkPassword() {
+    const password = document.getElementById('admin-password').value;
+    
+    if (password === ADMIN_PASSWORD) {
+        isAdminAuthenticated = true;
+        hideAuthModal();
+        showAdminPanel();
+        showNotification('Доступ к админ-панели разрешен', 'success');
+    } else {
+        document.getElementById('auth-error').textContent = 'Неверный пароль';
+        document.getElementById('admin-password').value = '';
+        document.getElementById('admin-password').focus();
+    }
+}
+
+// Переключение вкладок
+function switchTab(tabName) {
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-tab') === tabName) {
+            btn.classList.add('active');
         }
-        
-        // Показать подсказку
-        function showHint() {
-            if (!currentTask || !currentTask.hint) {
-                showNotification('Для этого задания нет подсказки', 'info');
-                return;
-            }
-            
-            showNotification(currentTask.hint, 'info');
+    });
+    
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(`${tabName}-tab`).classList.add('active');
+}
+
+// Переключение вкладок в админ-панели
+function switchAdminTab(tabName) {
+    document.querySelectorAll('.admin-tab').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-admin-tab') === tabName) {
+            btn.classList.add('active');
         }
-        
-        // Добавить/удалить из избранного
-        function toggleFavorite() {
-            if (!currentTask) return;
-            
-            const index = stats.favoriteTasks.indexOf(currentTask.id);
-            
-            if (index === -1) {
-                stats.favoriteTasks.push(currentTask.id);
-                showNotification('Добавлено в избранное', 'success');
-                updateAchievement('favorite', stats.favoriteTasks.length);
-            } else {
-                stats.favoriteTasks.splice(index, 1);
-                showNotification('Удалено из избранного', 'info');
-            }
-            
-            updateFavoriteButton();
-            saveUserData();
-        }
-        
-        // Обновить кнопку избранного
-        function updateFavoriteButton() {
-            const favoriteBtn = document.getElementById('favorite-btn');
-            const icon = favoriteBtn.querySelector('i');
-            
-            if (currentTask && stats.favoriteTasks.includes(currentTask.id)) {
-                icon.className = 'fas fa-star';
-                favoriteBtn.style.color = 'var(--warning-color)';
-            } else {
-                icon.className = 'far fa-star';
-                favoriteBtn.style.color = '';
-            }
-        }
-        
-        // Уведомления
-        function showNotification(message, type = 'info') {
+    });
+    
+    document.querySelectorAll('.admin-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(`admin-${tabName}-tab`).classList.add('active');
+}
+
+// Обновление бейджа новых заданий
+function updateNewTasksBadge() {
+    const badge = document.getElementById('new-tasks-badge');
+    const newTasksCount = tasks.length - stats.solvedTasks.length;
+    
+    if (newTasksCount > 0) {
+        badge.textContent = newTasksCount > 9 ? '9+' : newTasksCount;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// Показать подсказку
+function showHint() {
+    if (!currentTask || !currentTask.hint) {
+        showNotification('Для этого задания нет подсказки', 'info');
+        return;
+    }
+    
+    showNotification(currentTask.hint, 'info');
+}
+
+// Добавить/удалить из избранного
+function toggleFavorite() {
+    if (!currentTask) return;
+    
+    const index = stats.favoriteTasks.indexOf(currentTask.id);
+    
+    if (index === -1) {
+        stats.favoriteTasks.push(currentTask.id);
+        showNotification('Добавлено в избранное', 'success');
+        updateAchievement('favorite', stats.favoriteTasks.length);
+    } else {
+        stats.favoriteTasks.splice(index, 1);
+        showNotification('Удалено из избранного', 'info');
+    }
+    
+    updateFavoriteButton();
+    saveUserDataToLocalStorage();
+    syncUserDataWithBot();
+}
+
+// Обновить кнопку избранного
+function updateFavoriteButton() {
+    const favoriteBtn = document.getElementById('favorite-btn');
+    const icon = favoriteBtn.querySelector('i');
+    
+    if (currentTask && stats.favoriteTasks.includes(currentTask.id)) {
+        icon.className = 'fas fa-star';
+        favoriteBtn.style.color = 'var(--warning-color)';
+    } else {
+        icon.className = 'far fa-star';
+        favoriteBtn.style.color = '';
+    }
+}
+
+// Уведомления
+function showNotification(message, type = 'info') {
+    try {
+        if (tg && tg.showAlert && typeof tg.showAlert === 'function') {
             tg.showAlert(message);
+        } else {
+            // Fallback для старых версий WebApp
+            alert(message);
         }
-        
-        // Настройка обработчиков событий
-        function setupEventListeners() {
-            // Навигация
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const tabName = this.getAttribute('data-tab');
-                    switchTab(tabName);
-                });
-            });
-            
-            // Кнопки действий
-            document.getElementById('check-btn').addEventListener('click', checkAnswer);
-            document.getElementById('next-btn').addEventListener('click', showRandomTask);
-            document.getElementById('hint-btn').addEventListener('click', showHint);
-            document.getElementById('favorite-btn').addEventListener('click', toggleFavorite);
-            
-            // Кнопки в шапке
-            document.getElementById('stats-btn').addEventListener('click', () => switchTab('tasks'));
-            document.getElementById('achievements-btn').addEventListener('click', () => switchTab('achievements'));
-            document.getElementById('admin-btn').addEventListener('click', showAdminPanel);
-            
-            // Ввод ответа по Enter
-            document.getElementById('answer-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    checkAnswer();
-                }
-            });
-            
-            // Админ-панель
-            document.getElementById('close-admin').addEventListener('click', closeAdminPanel);
-            document.getElementById('save-task-btn').addEventListener('click', addNewTask);
-            document.getElementById('save-theory-btn').addEventListener('click', addNewTheory);
-            document.getElementById('clear-theory-btn').addEventListener('click', () => {
-                document.getElementById('admin-theory-title').value = '';
-                document.getElementById('admin-theory-content').value = '';
-            });
-            document.getElementById('reset-user-btn').addEventListener('click', resetUserData);
-            
-            // Вкладки админ-панели
-            document.querySelectorAll('.admin-tab').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const tabName = this.getAttribute('data-admin-tab');
-                    switchAdminTab(tabName);
-                });
-            });
-            
-            // Авторизация
-            document.getElementById('submit-password').addEventListener('click', checkPassword);
-            document.getElementById('cancel-auth').addEventListener('click', hideAuthModal);
-            document.getElementById('admin-password').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    checkPassword();
-                }
-            });
-            
-            // Тип задания в админке
-            document.getElementById('admin-task-type').addEventListener('change', function() {
-                const optionsGroup = document.getElementById('admin-options-group');
-                if (this.value === 'single') {
-                    optionsGroup.style.display = 'block';
-                } else {
-                    optionsGroup.style.display = 'none';
-                }
-            });
-        }
-        // Для экономии места опускаю повторяющиеся функции
-        // В реальном коде они должны быть перенесены из предыдущей версии
-        
-        // Пример: функция обновления бейджа новых пробников
+    } catch (e) {
+        // Если и это не работает, используем alert
+        alert(message);
+    }
+}
+
+// Очистка кэша
+function clearCache() {
+    if (confirm('Вы уверены, что хотите очистить локальный кэш? Это может замедлить загрузку данных.')) {
+        localStorage.clear();
+        showNotification('Кэш очищен', 'success');
+        location.reload();
+    }
+}
+
         function updateNewExamsBadge() {
             const badge = document.getElementById('new-exams-badge');
             const newExamsCount = exams.length - stats.solvedExams.length;
