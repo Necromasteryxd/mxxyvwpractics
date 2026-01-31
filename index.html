@@ -848,7 +848,7 @@
         }
 
         .exam-variant-icon {
-            width: 48px;
+            width = 48px;
             height: 48px;
             border-radius: 50%;
             background: var(--exam-color);
@@ -1827,8 +1827,29 @@
                             loadedStats.dailyDate = today;
                         }
                         
+                        // Инициализируем массивы если их нет
+                        if (!loadedStats.solvedTasks) loadedStats.solvedTasks = [];
+                        if (!loadedStats.favoriteTasks) loadedStats.favoriteTasks = [];
+                        if (!loadedStats.solvedExams) loadedStats.solvedExams = [];
+                        if (!loadedStats.examScores) loadedStats.examScores = {};
+                        
                         this.updateStreakLogic(loadedStats);
                         AppData.stats = loadedStats;
+                    } else {
+                        // Если нет сохранённых данных, создаём структуру по умолчанию
+                        AppData.stats = {
+                            totalAttempts: 0,
+                            correctAttempts: 0,
+                            solvedTasks: [],
+                            favoriteTasks: [],
+                            solvedExams: [],
+                            examScores: {},
+                            lastActive: new Date().toISOString(),
+                            streak: 0,
+                            lastStreakDate: new Date().toISOString(),
+                            dailyProgress: 0,
+                            dailyDate: new Date().toISOString().split('T')[0]
+                        };
                     }
                     
                     if (savedAchievements) {
@@ -1882,6 +1903,11 @@
                 
                 statsData.lastActive = now.toISOString();
                 statsData.lastStreakDate = now.toISOString();
+                
+                // Инициализируем solvedExams если его нет
+                if (!statsData.solvedExams) {
+                    statsData.solvedExams = [];
+                }
             }
 
             static getInitialAchievements() {
@@ -2196,7 +2222,9 @@
                 const badge = document.getElementById('new-exams-badge');
                 if (!badge) return;
                 
-                const newExamsCount = AppData.exams.length - AppData.stats.solvedExams.length;
+                // Используем безопасный доступ к solvedExams
+                const solvedExams = AppData.stats.solvedExams || [];
+                const newExamsCount = AppData.exams.length - solvedExams.length;
                 
                 if (newExamsCount > 0) {
                     badge.textContent = newExamsCount > 9 ? '9+' : newExamsCount;
@@ -2472,7 +2500,9 @@
                 
                 let html = '';
                 AppData.exams.forEach(exam => {
-                    const isSolved = AppData.stats.solvedExams.includes(exam.id);
+                    // Используем безопасный доступ к solvedExams
+                    const solvedExams = AppData.stats.solvedExams || [];
+                    const isSolved = solvedExams.includes(exam.id);
                     const score = AppData.stats.examScores[exam.id] || 0;
                     const progressPercent = isSolved ? 100 : 0;
                     
