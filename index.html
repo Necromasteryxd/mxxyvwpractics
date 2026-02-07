@@ -57,7 +57,7 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 12px;
+            padding: 8px;
             overflow-x: hidden;
         }
 
@@ -67,56 +67,55 @@
             position: relative;
         }
 
-        /* Header */
         .header {
-            padding: 16px 0;
-            margin-bottom: 16px;
+            padding: 12px 0;
+            margin-bottom: 12px;
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .logo-icon {
             background: var(--accent-primary);
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             color: white;
         }
 
         .logo-text h1 {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 700;
         }
 
         .logo-text p {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
             margin-top: 2px;
         }
 
         .header-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .icon-btn {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: var(--radius-md);
             display: flex;
             align-items: center;
@@ -124,7 +123,7 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
             touch-action: manipulation;
@@ -136,19 +135,18 @@
             transform: translateY(-1px);
         }
 
-        /* Daily Stats */
         .daily-stats {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 14px;
+            margin-bottom: 14px;
             border: 1px solid var(--border-color);
         }
 
         .stats-row {
             display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
         .stat {
@@ -157,16 +155,16 @@
         }
 
         .stat-value {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--accent-primary);
             line-height: 1;
         }
 
         .stat-label {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
-            margin-top: 4px;
+            margin-top: 3px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             font-weight: 600;
@@ -175,23 +173,23 @@
         .streak-counter {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px;
+            gap: 10px;
+            padding: 10px;
             background: var(--bg-tertiary);
             border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
         }
 
         .streak-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 18px;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
             background: var(--warning-color);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .streak-info {
@@ -199,40 +197,39 @@
         }
 
         .streak-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-secondary);
             margin-bottom: 2px;
         }
 
         .streak-days {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--warning-color);
         }
 
         .streak-next {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-muted);
         }
 
-        /* Navigation */
         .nav {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            margin-bottom: 20px;
+            gap: 5px;
+            margin-bottom: 16px;
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 8px;
+            padding: 6px;
             border: 1px solid var(--border-color);
         }
 
         .nav-btn {
-            padding: 10px 0;
+            padding: 8px 0;
             text-align: center;
             border-radius: var(--radius-md);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -242,13 +239,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             position: relative;
             touch-action: manipulation;
         }
 
         .nav-btn i {
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .nav-btn.active {
@@ -266,20 +263,19 @@
         .nav-badge {
             position: absolute;
             top: -2px;
-            right: 4px;
+            right: 2px;
             background: var(--error-color);
             color: white;
-            font-size: 9px;
-            width: 14px;
-            height: 14px;
-            border-radius: 7px;
+            font-size: 8px;
+            width: 12px;
+            height: 12px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
         }
 
-        /* Content Tabs */
         .tab-content {
             display: none;
         }
@@ -288,12 +284,11 @@
             display: block;
         }
 
-        /* Task Card */
         .task-card {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             border: 1px solid var(--border-color);
             position: relative;
             overflow: hidden;
@@ -313,32 +308,32 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .task-number {
             background: var(--bg-tertiary);
             color: var(--accent-primary);
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
         }
 
         .task-theme {
             color: var(--text-muted);
-            font-size: 13px;
-            margin-top: 4px;
+            font-size: 12px;
+            margin-top: 3px;
         }
 
         .task-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .action-btn {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: var(--radius-md);
             display: flex;
             align-items: center;
@@ -346,7 +341,7 @@
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.2s ease;
             touch-action: manipulation;
@@ -360,9 +355,9 @@
         }
 
         .task-text {
-            line-height: 1.6;
-            font-size: 15px;
-            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 14px;
+            margin-bottom: 16px;
             color: var(--text-primary);
             -webkit-user-select: text;
             -moz-user-select: text;
@@ -379,12 +374,12 @@
         }
 
         .options-container {
-            margin: 16px 0;
+            margin: 12px 0;
         }
 
         .option {
-            padding: 14px;
-            margin-bottom: 8px;
+            padding: 12px;
+            margin-bottom: 6px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
@@ -392,7 +387,7 @@
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             touch-action: manipulation;
         }
 
@@ -408,9 +403,9 @@
         }
 
         .option-marker {
-            width: 22px;
-            height: 22px;
-            border-radius: 11px;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
@@ -418,7 +413,7 @@
             font-weight: 600;
             color: var(--text-muted);
             flex-shrink: 0;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .option.selected .option-marker {
@@ -429,7 +424,7 @@
 
         .option-text {
             flex: 1;
-            font-size: 14px;
+            font-size: 13px;
             -webkit-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
@@ -441,10 +436,10 @@
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 14px;
-            font-size: 15px;
+            padding: 12px;
+            font-size: 14px;
             color: var(--text-primary);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             -webkit-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
@@ -456,19 +451,18 @@
             border-color: var(--accent-primary);
         }
 
-        /* Buttons */
         .btn {
-            padding: 14px 20px;
+            padding: 12px 16px;
             border-radius: var(--radius-md);
             border: none;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             touch-action: manipulation;
         }
 
@@ -523,15 +517,14 @@
 
         .buttons-row {
             display: flex;
-            gap: 10px;
-            margin-top: 8px;
+            gap: 8px;
+            margin-top: 6px;
         }
 
-        /* Result */
         .result {
-            padding: 20px;
+            padding: 16px;
             border-radius: var(--radius-md);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             text-align: center;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
@@ -548,8 +541,8 @@
         }
 
         .result-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
+            font-size: 36px;
+            margin-bottom: 10px;
         }
 
         .result.correct .result-icon {
@@ -561,33 +554,32 @@
         }
 
         .result-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
 
         .result-desc {
             color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 13px;
+            line-height: 1.4;
         }
 
         .result-answer {
             background: var(--bg-tertiary);
-            padding: 10px;
+            padding: 8px;
             border-radius: var(--radius-sm);
-            margin-top: 12px;
+            margin-top: 10px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        /* Progress Bar */
         .progress-bar {
-            height: 6px;
+            height: 5px;
             background: var(--border-color);
             border-radius: 3px;
             overflow: hidden;
-            margin: 12px 0;
+            margin: 10px 0;
         }
 
         .progress-fill {
@@ -597,74 +589,71 @@
             transition: width 0.6s ease;
         }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 16px;
+            gap: 10px;
+            margin-top: 12px;
         }
 
         .stat-card {
             background: var(--bg-primary);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 14px;
             text-align: center;
             border: 1px solid var(--border-color);
         }
 
         .stat-card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
             background: var(--accent-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px;
-            font-size: 18px;
+            margin: 0 auto 10px;
+            font-size: 16px;
             color: white;
         }
 
         .stat-card-value {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: var(--accent-primary);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .stat-card-label {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             font-weight: 600;
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 32px 16px;
             color: var(--text-muted);
         }
 
         .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
+            font-size: 40px;
+            margin-bottom: 12px;
             opacity: 0.5;
         }
 
         .empty-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--text-secondary);
         }
 
-        /* Achievements */
         .achievements-container {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             border: 1px solid var(--border-color);
         }
 
@@ -672,27 +661,27 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .achievements-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .achievements-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
 
         .achievement {
             background: var(--bg-primary);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 14px;
             text-align: center;
             border: 1px solid var(--border-color);
         }
@@ -706,15 +695,15 @@
         }
 
         .achievement-badge {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: var(--accent-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px;
-            font-size: 20px;
+            margin: 0 auto 10px;
+            font-size: 18px;
             color: white;
         }
 
@@ -724,15 +713,15 @@
         }
 
         .achievement-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .achievement-desc {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .achievement-progress {
@@ -740,7 +729,7 @@
             background: var(--border-color);
             border-radius: 2px;
             overflow: hidden;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .achievement-progress-fill {
@@ -749,60 +738,58 @@
             border-radius: 2px;
         }
 
-        /* Theory Tab */
         .theory-section {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             border: 1px solid var(--border-color);
         }
 
         .theory-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
         }
 
         .theory-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
             background: var(--accent-primary);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .theory-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             flex: 1;
         }
 
         .theory-content {
-            line-height: 1.6;
-            font-size: 14px;
+            line-height: 1.5;
+            font-size: 13px;
             color: var(--text-secondary);
         }
 
         .theory-content h3 {
             color: var(--text-primary);
-            margin: 16px 0 8px 0;
-            font-size: 16px;
+            margin: 12px 0 6px 0;
+            font-size: 14px;
         }
 
-        /* Exam Variants Tab */
         .exam-variants-container {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             border: 1px solid var(--border-color);
         }
 
@@ -810,30 +797,30 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
         }
 
         .exam-variants-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .exam-variants-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         .exam-variant {
             background: var(--bg-primary);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 14px;
             text-align: center;
             border: 1px solid var(--border-color);
             cursor: pointer;
@@ -848,45 +835,45 @@
         }
 
         .exam-variant-icon {
-            width = 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: var(--exam-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px;
-            font-size: 20px;
+            margin: 0 auto 10px;
+            font-size: 18px;
             color: white;
         }
 
         .exam-variant-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: var(--text-primary);
         }
 
         .exam-variant-desc {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .exam-variant-stats {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-secondary);
-            margin-top: 8px;
+            margin-top: 6px;
             display: flex;
             justify-content: space-between;
         }
 
         .exam-variant-progress {
-            height: 4px;
+            height: 3px;
             background: var(--border-color);
             border-radius: 2px;
             overflow: hidden;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .exam-variant-progress-fill {
@@ -895,7 +882,6 @@
             border-radius: 2px;
         }
 
-        /* Admin Panel */
         .admin-panel {
             position: fixed;
             top: 0;
@@ -904,7 +890,7 @@
             height: 100%;
             background: var(--bg-primary);
             z-index: 1000;
-            padding: 20px;
+            padding: 16px;
             overflow-y: auto;
             display: none;
         }
@@ -917,27 +903,27 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
         }
 
         .admin-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .close-admin {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: var(--radius-md);
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -947,22 +933,22 @@
 
         .admin-tabs {
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 6px;
+            margin-bottom: 16px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 16px;
+            padding-bottom: 12px;
             flex-wrap: wrap;
         }
 
         .admin-tab {
-            padding: 10px 16px;
+            padding: 8px 12px;
             border-radius: var(--radius-md);
             background: transparent;
             border: none;
             color: var(--text-secondary);
             font-weight: 600;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             touch-action: manipulation;
         }
 
@@ -980,15 +966,15 @@
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .form-input, .form-textarea, .form-select {
@@ -996,8 +982,8 @@
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 12px;
-            font-size: 14px;
+            padding: 10px;
+            font-size: 13px;
             color: var(--text-primary);
             -webkit-user-select: text;
             -moz-user-select: text;
@@ -1006,9 +992,9 @@
         }
 
         .form-textarea {
-            min-height: 120px;
+            min-height: 100px;
             resize: vertical;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .form-input:focus, .form-textarea:focus, .form-select:focus {
@@ -1018,11 +1004,10 @@
 
         .admin-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 24px;
+            gap: 8px;
+            margin-top: 20px;
         }
 
-        /* Auth Modal */
         .auth-modal {
             position: fixed;
             top: 0;
@@ -1043,37 +1028,37 @@
         .auth-container {
             background: var(--bg-primary);
             border-radius: var(--radius-lg);
-            padding: 24px;
-            max-width: 320px;
+            padding: 20px;
+            max-width: 300px;
             width: 90%;
             border: 1px solid var(--border-color);
         }
 
         .auth-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
             background: var(--accent-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            margin: 0 auto 16px;
             color: white;
-            font-size: 24px;
+            font-size: 20px;
         }
 
         .auth-title {
             text-align: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .auth-subtitle {
             text-align: center;
             color: var(--text-muted);
-            margin-bottom: 20px;
-            font-size: 14px;
+            margin-bottom: 16px;
+            font-size: 13px;
         }
 
         .auth-input {
@@ -1081,10 +1066,10 @@
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 14px;
-            font-size: 16px;
+            padding: 12px;
+            font-size: 14px;
             color: var(--text-primary);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             text-align: center;
             -webkit-user-select: text;
             -moz-user-select: text;
@@ -1100,30 +1085,28 @@
         .auth-error {
             color: var(--error-color);
             text-align: center;
-            margin-bottom: 16px;
-            font-size: 14px;
-            min-height: 20px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            min-height: 18px;
         }
 
-        /* Sync Status */
         .sync-status {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 16px;
+            right: 16px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 8px 12px;
-            font-size: 12px;
+            padding: 6px 10px;
+            font-size: 11px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             z-index: 1000;
             box-shadow: var(--shadow-md);
             display: none;
         }
 
-        /* Loading overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -1146,13 +1129,13 @@
         }
 
         .loading-spinner {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border: 3px solid var(--border-color);
             border-top-color: var(--accent-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         @keyframes spin {
@@ -1162,7 +1145,7 @@
         @media (max-width: 480px) {
             .stats-row {
                 flex-direction: column;
-                gap: 16px;
+                gap: 12px;
             }
             
             .nav {
@@ -1174,12 +1157,12 @@
             }
             
             .btn {
-                padding: 12px 16px;
-                font-size: 14px;
+                padding: 10px 14px;
+                font-size: 13px;
             }
             
             .task-card, .achievements-container, .theory-section, .exam-variants-container {
-                padding: 16px;
+                padding: 14px;
             }
             
             .admin-tabs {
@@ -1187,21 +1170,19 @@
             }
             
             .admin-tab {
-                font-size: 12px;
-                padding: 8px 12px;
+                font-size: 11px;
+                padding: 6px 10px;
             }
         }
     </style>
 </head>
 <body class="theme-light">
-    <!-- Loading overlay -->
     <div class="loading-overlay" id="loading-overlay">
         <div class="loading-spinner"></div>
         <div style="color: var(--text-secondary); font-weight: 600;">Загрузка приложения...</div>
     </div>
 
     <div class="app-container">
-        <!-- Header -->
         <header class="header">
             <div class="header-top">
                 <div class="logo">
@@ -1258,7 +1239,6 @@
             </div>
         </header>
         
-        <!-- Navigation -->
         <nav class="nav">
             <button class="nav-btn active" data-tab="practice">
                 <i class="fas fa-dice"></i>
@@ -1284,7 +1264,6 @@
             </button>
         </nav>
         
-        <!-- Practice Tab -->
         <div class="tab-content active" id="practice-tab">
             <div class="task-card">
                 <div class="task-header">
@@ -1334,13 +1313,12 @@
                 <div class="progress-bar">
                     <div class="progress-fill" id="daily-progress" style="width: 0%"></div>
                 </div>
-                <div style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 8px;">
+                <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 6px;">
                     Решено: <span id="daily-solved">0</span>/5 заданий
                 </div>
             </div>
         </div>
         
-        <!-- Tasks Tab -->
         <div class="tab-content" id="tasks-tab">
             <div class="task-card">
                 <div class="task-header">
@@ -1369,11 +1347,9 @@
             </div>
             
             <div id="tasks-list-container">
-                <!-- Задания будут загружены динамически -->
             </div>
         </div>
         
-        <!-- Exams Tab -->
         <div class="tab-content" id="exams-tab">
             <div class="exam-variants-container">
                 <div class="exam-variants-header">
@@ -1385,7 +1361,6 @@
                 </div>
                 
                 <div class="exam-variants-grid" id="exams-grid">
-                    <!-- Варианты будут загружены динамически -->
                 </div>
                 
                 <div class="buttons-row">
@@ -1397,14 +1372,11 @@
             </div>
         </div>
         
-        <!-- Theory Tab -->
         <div class="tab-content" id="theory-tab">
             <div id="theory-content-container">
-                <!-- Теория будет загружена динамически -->
             </div>
         </div>
         
-        <!-- Achievements Tab -->
         <div class="tab-content" id="achievements-tab">
             <div class="achievements-container">
                 <div class="achievements-header">
@@ -1416,12 +1388,10 @@
                 </div>
                 
                 <div class="achievements-grid" id="achievements-grid">
-                    <!-- Достижения будут загружены динамически -->
                 </div>
             </div>
         </div>
         
-        <!-- Admin Panel -->
         <div class="admin-panel" id="admin-panel">
             <div class="admin-header">
                 <div class="admin-title">
@@ -1512,15 +1482,13 @@
                     </button>
                 </div>
                 
-                <div class="form-group" style="margin-top: 30px;">
+                <div class="form-group" style="margin-top: 24px;">
                     <label class="form-label">Все задания (всего: <span id="admin-tasks-count">0</span>)</label>
-                    <div id="admin-tasks-list" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; background: var(--bg-tertiary);">
-                        <!-- Список заданий будет здесь -->
+                    <div id="admin-tasks-list" style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px; background: var(--bg-tertiary);">
                     </div>
                 </div>
             </div>
             
-            <!-- Exams Admin -->
             <div class="admin-content" id="admin-exams-tab">
                 <div class="form-group">
                     <label class="form-label">Название варианта</label>
@@ -1549,15 +1517,13 @@
                     </button>
                 </div>
                 
-                <div class="form-group" style="margin-top: 30px;">
+                <div class="form-group" style="margin-top: 24px;">
                     <label class="form-label">Все варианты (всего: <span id="admin-exams-count">0</span>)</label>
-                    <div id="admin-exams-list" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; background: var(--bg-tertiary);">
-                        <!-- Список вариантов будет здесь -->
+                    <div id="admin-exams-list" style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px; background: var(--bg-tertiary);">
                     </div>
                 </div>
             </div>
             
-            <!-- Theory Admin -->
             <div class="admin-content" id="admin-theory-tab">
                 <div class="form-group">
                     <label class="form-label">Название раздела теории</label>
@@ -1576,27 +1542,25 @@
                     </button>
                 </div>
                 
-                <div class="form-group" style="margin-top: 30px;">
+                <div class="form-group" style="margin-top: 24px;">
                     <label class="form-label">Все разделы теории</label>
-                    <div id="admin-theory-list" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; background: var(--bg-tertiary);">
-                        <!-- Список теории будет здесь -->
+                    <div id="admin-theory-list" style="max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px; background: var(--bg-tertiary);">
                     </div>
                 </div>
             </div>
             
-            <!-- Users Admin -->
             <div class="admin-content" id="admin-users-tab">
                 <div class="form-group">
                     <label class="form-label">Статистика пользователей</label>
-                    <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <div style="background: var(--bg-tertiary); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                             <div>
-                                <div style="font-size: 24px; font-weight: 700; color: var(--accent-primary);" id="total-users">0</div>
-                                <div style="font-size: 12px; color: var(--text-muted);">Всего пользователей</div>
+                                <div style="font-size: 22px; font-weight: 700; color: var(--accent-primary);" id="total-users">0</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">Всего пользователей</div>
                             </div>
                             <div>
-                                <div style="font-size: 24px; font-weight: 700; color: var(--success-color);" id="active-today">0</div>
-                                <div style="font-size: 12px; color: var(--text-muted);">Активных сегодня</div>
+                                <div style="font-size: 22px; font-weight: 700; color: var(--success-color);" id="active-today">0</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">Активных сегодня</div>
                             </div>
                         </div>
                     </div>
@@ -1604,7 +1568,7 @@
                 
                 <div class="form-group">
                     <label class="form-label">Сброс данных пользователя</label>
-                    <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <div style="background: var(--bg-tertiary); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
                         <button class="btn btn-danger" id="reset-user-btn" style="width: 100%;">
                             <i class="fas fa-trash"></i>
                             <span>Сбросить мои данные</span>
@@ -1613,11 +1577,10 @@
                 </div>
             </div>
             
-            <!-- Sync Admin -->
             <div class="admin-content" id="admin-sync-tab">
                 <div class="form-group">
                     <label class="form-label">Настройки синхронизации</label>
-                    <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <div style="background: var(--bg-tertiary); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
                         <button class="btn btn-primary" id="force-sync-btn" style="width: 100%;">
                             <i class="fas fa-sync"></i>
                             <span>Принудительная синхронизация</span>
@@ -1627,27 +1590,26 @@
                 
                 <div class="form-group">
                     <label class="form-label">Статус синхронизации</label>
-                    <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-                        <div style="margin-bottom: 8px;">
-                            <div style="font-size: 12px; color: var(--text-muted);">Задания</div>
-                            <div style="font-size: 16px; font-weight: 700; color: var(--accent-primary);" id="sync-tasks-status">Загружено: 0</div>
+                    <div style="background: var(--bg-tertiary); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                        <div style="margin-bottom: 6px;">
+                            <div style="font-size: 11px; color: var(--text-muted);">Задания</div>
+                            <div style="font-size: 14px; font-weight: 700; color: var(--accent-primary);" id="sync-tasks-status">Загружено: 0</div>
                         </div>
                         
-                        <div style="margin-bottom: 8px;">
-                            <div style="font-size: 12px; color: var(--text-muted);">Пробники</div>
-                            <div style="font-size: 16px; font-weight: 700; color: var(--exam-color);" id="sync-exams-status">Загружено: 0</div>
+                        <div style="margin-bottom: 6px;">
+                            <div style="font-size: 11px; color: var(--text-muted);">Пробники</div>
+                            <div style="font-size: 14px; font-weight: 700; color: var(--exam-color);" id="sync-exams-status">Загружено: 0</div>
                         </div>
                         
-                        <div style="margin-bottom: 8px;">
-                            <div style="font-size: 12px; color: var(--text-muted);">Теория</div>
-                            <div style="font-size: 16px; font-weight: 700; color: var(--success-color);" id="sync-theory-status">Загружено: 0</div>
+                        <div style="margin-bottom: 6px;">
+                            <div style="font-size: 11px; color: var(--text-muted);">Теория</div>
+                            <div style="font-size: 14px; font-weight: 700; color: var(--success-color);" id="sync-theory-status">Загружено: 0</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Auth Modal -->
         <div class="auth-modal" id="auth-modal">
             <div class="auth-container">
                 <div class="auth-icon">
@@ -1672,7 +1634,6 @@
             </div>
         </div>
         
-        <!-- Sync Status -->
         <div class="sync-status" id="sync-status">
             <i class="fas fa-sync"></i>
             <span id="sync-text"></span>
@@ -1680,24 +1641,21 @@
     </div>
 
     <script>
-        // ==================== КОНФИГУРАЦИЯ ====================
         const CONFIG = {
             ADMIN_PASSWORD: "admin123",
             STORAGE_PREFIX: "ege_russian_",
             DAILY_GOAL: 5,
             SYNC_INTERVAL: 30000,
-            DEFAULT_BOT_TOKEN: "7224974086:AAHEh1nuTy3v4Duifgh6XNIp2MWP7eGbODk",
+            DEFAULT_BOT_TOKEN: "8015597915:AAFOxZ0c7aIZErWmS7jeSLoiIdTbzGBrqKA",
             DEFAULT_ADMIN_CHAT_ID: "1527919061"
         };
 
-        // ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
         let tg = null;
         let userId = null;
         let botToken = CONFIG.DEFAULT_BOT_TOKEN;
         let adminChatId = CONFIG.DEFAULT_ADMIN_CHAT_ID;
         let BOT_API_URL = `https://api.telegram.org/bot${botToken}`;
 
-        // ==================== СТРУКТУРА ДАННЫХ ====================
         const AppData = {
             tasks: [],
             exams: [],
@@ -1730,7 +1688,6 @@
             lastSyncTime: 0
         };
 
-        // ==================== УТИЛИТЫ ====================
         class Utils {
             static normalizeAnswer(answer) {
                 if (Array.isArray(answer)) {
@@ -1787,7 +1744,6 @@
             }
         }
 
-        // ==================== РАБОТА С ХРАНИЛИЩЕМ ====================
         class StorageManager {
             static getStorageKey(key) {
                 return CONFIG.STORAGE_PREFIX + userId + '_' + key;
@@ -1827,29 +1783,8 @@
                             loadedStats.dailyDate = today;
                         }
                         
-                        // Инициализируем массивы если их нет
-                        if (!loadedStats.solvedTasks) loadedStats.solvedTasks = [];
-                        if (!loadedStats.favoriteTasks) loadedStats.favoriteTasks = [];
-                        if (!loadedStats.solvedExams) loadedStats.solvedExams = [];
-                        if (!loadedStats.examScores) loadedStats.examScores = {};
-                        
                         this.updateStreakLogic(loadedStats);
                         AppData.stats = loadedStats;
-                    } else {
-                        // Если нет сохранённых данных, создаём структуру по умолчанию
-                        AppData.stats = {
-                            totalAttempts: 0,
-                            correctAttempts: 0,
-                            solvedTasks: [],
-                            favoriteTasks: [],
-                            solvedExams: [],
-                            examScores: {},
-                            lastActive: new Date().toISOString(),
-                            streak: 0,
-                            lastStreakDate: new Date().toISOString(),
-                            dailyProgress: 0,
-                            dailyDate: new Date().toISOString().split('T')[0]
-                        };
                     }
                     
                     if (savedAchievements) {
@@ -1903,11 +1838,6 @@
                 
                 statsData.lastActive = now.toISOString();
                 statsData.lastStreakDate = now.toISOString();
-                
-                // Инициализируем solvedExams если его нет
-                if (!statsData.solvedExams) {
-                    statsData.solvedExams = [];
-                }
             }
 
             static getInitialAchievements() {
@@ -1955,7 +1885,6 @@
             }
         }
 
-        // ==================== API БОТА TELEGRAM ====================
         class BotAPI {
             static async saveDataToBot(key, data) {
                 if (!botToken || botToken === CONFIG.DEFAULT_BOT_TOKEN) {
@@ -2032,7 +1961,6 @@
             }
         }
 
-        // ==================== СИНХРОНИЗАЦИЯ ====================
         class SyncManager {
             static async syncAllData() {
                 if (!botToken || botToken === CONFIG.DEFAULT_BOT_TOKEN) return false;
@@ -2048,45 +1976,54 @@
                         BotAPI.loadDataFromBot('theory')
                     ]);
                     
-                    // Синхронизация заданий
-                    if (botTasks && JSON.stringify(botTasks) !== JSON.stringify(AppData.tasks)) {
+                    const savedTasks = StorageManager.loadAppData('tasks') || [];
+                    const savedExams = StorageManager.loadAppData('exams') || [];
+                    const savedTheory = StorageManager.loadAppData('theory') || [];
+                    
+                    if (botTasks && Array.isArray(botTasks) && botTasks.length > 0) {
                         AppData.tasks = botTasks;
                         StorageManager.saveAppData('tasks', AppData.tasks);
-                        UI.renderTasksList();
-                        UI.updateStatsDisplay();
                         changed = true;
+                    } else if (savedTasks.length > 0) {
+                        AppData.tasks = savedTasks;
                     }
                     
-                    // Синхронизация пробников
-                    if (botExams && JSON.stringify(botExams) !== JSON.stringify(AppData.exams)) {
+                    if (botExams && Array.isArray(botExams) && botExams.length > 0) {
                         AppData.exams = botExams;
                         StorageManager.saveAppData('exams', AppData.exams);
-                        UI.renderExamsList();
                         changed = true;
+                    } else if (savedExams.length > 0) {
+                        AppData.exams = savedExams;
                     }
                     
-                    // Синхронизация теории
-                    if (botTheory && JSON.stringify(botTheory) !== JSON.stringify(AppData.theory)) {
+                    if (botTheory && Array.isArray(botTheory) && botTheory.length > 0) {
                         AppData.theory = botTheory;
                         StorageManager.saveAppData('theory', AppData.theory);
-                        UI.renderTheory();
                         changed = true;
+                    } else if (savedTheory.length > 0) {
+                        AppData.theory = savedTheory;
                     }
                     
                     AppData.lastSyncTime = Date.now();
-                    const lastSyncElement = document.getElementById('last-sync-time');
-                    if (lastSyncElement) {
-                        lastSyncElement.textContent = new Date().toLocaleString();
-                    }
                     
                     if (changed) {
                         Utils.showSyncStatus('Данные обновлены', 'success');
+                        UI.updateStatsDisplay();
+                        UI.renderTasksList();
+                        UI.renderExamsList();
+                        UI.renderTheory();
+                        UI.updateNewTasksBadge();
+                        UI.updateNewExamsBadge();
                     } else {
                         setTimeout(() => {
                             const syncStatus = document.getElementById('sync-status');
                             if (syncStatus) syncStatus.style.display = 'none';
                         }, 1000);
                     }
+                    
+                    Utils.updateSyncStatus('tasks', AppData.tasks.length);
+                    Utils.updateSyncStatus('exams', AppData.exams.length);
+                    Utils.updateSyncStatus('theory', AppData.theory.length);
                     
                     return changed;
                 } catch (error) {
@@ -2147,7 +2084,6 @@
             }
         }
 
-        // ==================== ОСНОВНОЙ ИНТЕРФЕЙС ====================
         class UI {
             static updateStatsDisplay() {
                 const elements = {
@@ -2171,7 +2107,6 @@
                 if (elements.favoriteTasks) elements.favoriteTasks.textContent = AppData.stats.favoriteTasks.length;
                 if (elements.tasksCount) elements.tasksCount.textContent = `${AppData.tasks.length} заданий`;
                 
-                // Обновление в админке
                 if (AppData.isAdminAuthenticated) {
                     const adminTasksCount = document.getElementById('admin-tasks-count');
                     const adminExamsCount = document.getElementById('admin-exams-count');
@@ -2222,9 +2157,7 @@
                 const badge = document.getElementById('new-exams-badge');
                 if (!badge) return;
                 
-                // Используем безопасный доступ к solvedExams
-                const solvedExams = AppData.stats.solvedExams || [];
-                const newExamsCount = AppData.exams.length - solvedExams.length;
+                const newExamsCount = AppData.exams.length - AppData.stats.solvedExams.length;
                 
                 if (newExamsCount > 0) {
                     badge.textContent = newExamsCount > 9 ? '9+' : newExamsCount;
@@ -2246,7 +2179,6 @@
                 const randomIndex = Math.floor(Math.random() * availableTasks.length);
                 AppData.currentTask = availableTasks[randomIndex];
                 
-                // Обновляем отображение
                 const elements = {
                     taskNumber: document.getElementById('task-number'),
                     taskTheme: document.getElementById('task-theme'),
@@ -2295,7 +2227,6 @@
                             AppData.selectedOptions[AppData.currentTask.id] = option;
                         });
                         
-                        // Добавляем обработчик для тач-устройств
                         optionElement.addEventListener('touchstart', (e) => {
                             e.preventDefault();
                             e.currentTarget.click();
@@ -2331,7 +2262,6 @@
                             }
                         });
                         
-                        // Добавляем обработчик для тач-устройств
                         optionElement.addEventListener('touchstart', (e) => {
                             e.preventDefault();
                             e.currentTarget.click();
@@ -2421,7 +2351,7 @@
                 let html = '';
                 for (const theme in tasksByTheme) {
                     html += `
-                        <div class="task-card" style="margin-top: 12px;">
+                        <div class="task-card" style="margin-top: 10px;">
                             <div class="task-header">
                                 <div>
                                     <div class="task-number">${theme}</div>
@@ -2439,8 +2369,8 @@
                             <div class="option ${isSolved ? 'selected' : ''}" data-task-id="${task.id}">
                                 <div class="option-marker">${task.number}</div>
                                 <div class="option-text">
-                                    ${task.text.substring(0, 60)}${task.text.length > 60 ? '...' : ''}
-                                    ${isFavorite ? '<i class="fas fa-star" style="color: var(--warning-color); margin-left: 6px;"></i>' : ''}
+                                    ${task.text.substring(0, 50)}${task.text.length > 50 ? '...' : ''}
+                                    ${isFavorite ? '<i class="fas fa-star" style="color: var(--warning-color); margin-left: 5px;"></i>' : ''}
                                 </div>
                                 ${isSolved ? '<i class="fas fa-check" style="color: var(--success-color);"></i>' : ''}
                             </div>
@@ -2470,7 +2400,6 @@
                         }
                     });
                     
-                    // Добавляем обработчик для тач-устройств
                     item.addEventListener('touchstart', function(e) {
                         e.preventDefault();
                         e.currentTarget.click();
@@ -2500,9 +2429,7 @@
                 
                 let html = '';
                 AppData.exams.forEach(exam => {
-                    // Используем безопасный доступ к solvedExams
-                    const solvedExams = AppData.stats.solvedExams || [];
-                    const isSolved = solvedExams.includes(exam.id);
+                    const isSolved = AppData.stats.solvedExams.includes(exam.id);
                     const score = AppData.stats.examScores[exam.id] || 0;
                     const progressPercent = isSolved ? 100 : 0;
                     
@@ -2536,7 +2463,6 @@
                         GameLogic.startExam(examId);
                     });
                     
-                    // Добавляем обработчик для тач-устройств
                     item.addEventListener('touchstart', function(e) {
                         e.preventDefault();
                         e.currentTarget.click();
@@ -2574,7 +2500,7 @@
                             <div class="theory-content">
                                 ${section.content}
                             </div>
-                            <div style="text-align: center; margin-top: 16px;">
+                            <div style="text-align: center; margin-top: 12px;">
                                 <button class="btn btn-secondary practice-theory-btn" data-theme="${section.title.split(':')[0]}">
                                     <i class="fas fa-play-circle"></i>
                                     <span>Потренировать</span>
@@ -2602,7 +2528,6 @@
                         }
                     });
                     
-                    // Добавляем обработчик для тач-устройств
                     btn.addEventListener('touchstart', function(e) {
                         e.preventDefault();
                         e.currentTarget.click();
@@ -2642,7 +2567,7 @@
                                 <div class="achievement-progress">
                                     <div class="achievement-progress-fill" style="width: ${progressPercent}%"></div>
                                 </div>
-                                <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">
+                                <div style="font-size: 9px; color: var(--text-muted); margin-top: 3px;">
                                     ${achievement.progress}/${achievement.max}
                                 </div>
                             ` : ''}
@@ -2697,7 +2622,6 @@
             }
         }
 
-        // ==================== ИГРОВАЯ ЛОГИКА ====================
         class GameLogic {
             static checkAnswer() {
                 if (!AppData.currentTask) return;
@@ -2834,7 +2758,6 @@
             }
         }
 
-        // ==================== АДМИН ПАНЕЛЬ ====================
         class AdminUI {
             static showAdminPanel() {
                 if (!AppData.isAdminAuthenticated) {
@@ -2868,7 +2791,6 @@
                 if (adminExamsCount) adminExamsCount.textContent = AppData.exams.length;
                 
                 this.populateEditTaskSelect();
-                this.populateEditExamSelect();
                 
                 this.loadUsersStats();
             }
@@ -2882,21 +2804,7 @@
                 AppData.tasks.forEach(task => {
                     const option = document.createElement('option');
                     option.value = task.id;
-                    option.textContent = `#${task.number} - ${task.theme}: ${task.text.substring(0, 50)}${task.text.length > 50 ? '...' : ''}`;
-                    select.appendChild(option);
-                });
-            }
-
-            static populateEditExamSelect() {
-                const select = document.getElementById('admin-edit-exam-select');
-                if (!select) return;
-                
-                select.innerHTML = '<option value="">Выберите вариант...</option>';
-                
-                AppData.exams.forEach(exam => {
-                    const option = document.createElement('option');
-                    option.value = exam.id;
-                    option.textContent = `${exam.title} (${exam.tasksCount} заданий, ${exam.time} мин)`;
+                    option.textContent = `#${task.number} - ${task.theme}: ${task.text.substring(0, 40)}${task.text.length > 40 ? '...' : ''}`;
                     select.appendChild(option);
                 });
             }
@@ -2968,73 +2876,6 @@
                 if (editGroup) editGroup.style.display = 'none';
                 
                 const editSelect = document.getElementById('admin-edit-task-select');
-                if (editSelect) editSelect.value = '';
-            }
-
-            static enableExamEditMode(examId) {
-                AppData.editingExamId = examId;
-                const exam = AppData.exams.find(e => e.id === examId);
-                
-                if (!exam) return;
-                
-                const elements = {
-                    title: document.getElementById('admin-exam-title'),
-                    description: document.getElementById('admin-exam-description'),
-                    tasksCount: document.getElementById('admin-exam-tasks-count'),
-                    taskIds: document.getElementById('admin-exam-task-ids'),
-                    time: document.getElementById('admin-exam-time'),
-                    difficulty: document.getElementById('admin-exam-difficulty')
-                };
-                
-                if (elements.title) elements.title.value = exam.title;
-                if (elements.description) elements.description.value = exam.description;
-                if (elements.tasksCount) elements.tasksCount.value = exam.tasksCount;
-                if (elements.taskIds) elements.taskIds.value = exam.taskIds ? exam.taskIds.join(', ') : '';
-                if (elements.time) elements.time.value = exam.time;
-                if (elements.difficulty) elements.difficulty.value = exam.difficulty || 'средний';
-                
-                const saveBtnText = document.getElementById('save-exam-btn-text');
-                const deleteBtn = document.getElementById('delete-exam-btn');
-                
-                if (saveBtnText) saveBtnText.textContent = 'Обновить вариант';
-                if (deleteBtn) deleteBtn.style.display = 'block';
-            }
-
-            static disableExamEditMode() {
-                AppData.editingExamId = null;
-                
-                const elements = [
-                    'admin-exam-title',
-                    'admin-exam-description',
-                    'admin-exam-tasks-count',
-                    'admin-exam-task-ids',
-                    'admin-exam-time',
-                    'admin-exam-difficulty'
-                ];
-                
-                elements.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        if (id === 'admin-exam-tasks-count') element.value = 10;
-                        else if (id === 'admin-exam-time') element.value = 60;
-                        else if (id === 'admin-exam-difficulty') element.value = 'средний';
-                        else element.value = '';
-                    }
-                });
-                
-                const saveBtnText = document.getElementById('save-exam-btn-text');
-                const deleteBtn = document.getElementById('delete-exam-btn');
-                
-                if (saveBtnText) saveBtnText.textContent = 'Сохранить вариант';
-                if (deleteBtn) deleteBtn.style.display = 'none';
-                
-                const editModeSelect = document.getElementById('admin-exam-edit-mode');
-                if (editModeSelect) editModeSelect.value = 'new';
-                
-                const editGroup = document.getElementById('edit-exam-select-group');
-                if (editGroup) editGroup.style.display = 'none';
-                
-                const editSelect = document.getElementById('admin-edit-exam-select');
                 if (editSelect) editSelect.value = '';
             }
 
@@ -3167,17 +3008,13 @@
                     title: document.getElementById('admin-exam-title'),
                     description: document.getElementById('admin-exam-description'),
                     tasksCount: document.getElementById('admin-exam-tasks-count'),
-                    taskIds: document.getElementById('admin-exam-task-ids'),
-                    time: document.getElementById('admin-exam-time'),
-                    difficulty: document.getElementById('admin-exam-difficulty')
+                    time: document.getElementById('admin-exam-time')
                 };
                 
                 const title = elements.title.value.trim();
                 const description = elements.description.value.trim();
                 const tasksCount = parseInt(elements.tasksCount.value);
-                const taskIdsInput = elements.taskIds.value.trim();
                 const time = parseInt(elements.time.value);
-                const difficulty = elements.difficulty.value;
                 
                 if (!title) {
                     Utils.showNotification('Введите название варианта', 'error');
@@ -3194,42 +3031,19 @@
                     return;
                 }
                 
-                let taskIds = [];
-                if (taskIdsInput) {
-                    taskIds = taskIdsInput.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-                }
+                const newExam = {
+                    id: Date.now(),
+                    title: title,
+                    description: description,
+                    tasksCount: tasksCount,
+                    time: time,
+                    difficulty: 'средний',
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                };
                 
-                if (AppData.editingExamId) {
-                    const examIndex = AppData.exams.findIndex(e => e.id === AppData.editingExamId);
-                    if (examIndex !== -1) {
-                        AppData.exams[examIndex] = {
-                            ...AppData.exams[examIndex],
-                            title: title,
-                            description: description,
-                            tasksCount: tasksCount,
-                            taskIds: taskIds.length > 0 ? taskIds : undefined,
-                            time: time,
-                            difficulty: difficulty,
-                            updatedAt: Date.now()
-                        };
-                        Utils.showNotification('Вариант успешно обновлен!', 'success');
-                    }
-                } else {
-                    const newExam = {
-                        id: Date.now(),
-                        title: title,
-                        description: description,
-                        tasksCount: tasksCount,
-                        taskIds: taskIds.length > 0 ? taskIds : undefined,
-                        time: time,
-                        difficulty: difficulty,
-                        createdAt: Date.now(),
-                        updatedAt: Date.now()
-                    };
-                    
-                    AppData.exams.push(newExam);
-                    Utils.showNotification('Вариант успешно добавлен!', 'success');
-                }
+                AppData.exams.push(newExam);
+                Utils.showNotification('Вариант успешно добавлен!', 'success');
                 
                 StorageManager.saveAppData('exams', AppData.exams);
                 
@@ -3239,34 +3053,6 @@
                     UI.renderExamsList();
                     UI.updateNewExamsBadge();
                     this.renderAdminExamsList();
-                    this.populateEditExamSelect();
-                    this.disableExamEditMode();
-                }
-            }
-
-            static async deleteExam() {
-                if (!AppData.editingExamId) return;
-                
-                if (confirm('Вы уверены, что хотите удалить этот вариант? Все пользователи потеряют доступ к нему.')) {
-                    const examIndex = AppData.exams.findIndex(e => e.id === AppData.editingExamId);
-                    if (examIndex !== -1) {
-                        AppData.exams.splice(examIndex, 1);
-                        StorageManager.saveAppData('exams', AppData.exams);
-                        
-                        const deleteSuccess = await BotAPI.deleteDataFromBot('exams', AppData.editingExamId);
-                        
-                        if (deleteSuccess) {
-                            Utils.showNotification('Вариант удален у всех пользователей', 'success');
-                        } else {
-                            await BotAPI.saveDataToBot('exams', AppData.exams);
-                            Utils.showNotification('Вариант удален', 'success');
-                        }
-                        
-                        UI.renderExamsList();
-                        UI.updateNewExamsBadge();
-                        this.renderAdminExamsList();
-                        this.disableExamEditMode();
-                    }
                 }
             }
 
@@ -3312,31 +3098,31 @@
                 if (!container) return;
                 
                 if (AppData.tasks.length === 0) {
-                    container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Нет заданий</div>';
+                    container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 16px;">Нет заданий</div>';
                     return;
                 }
                 
-                let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+                let html = '<div style="display: flex; flex-direction: column; gap: 6px;">';
                 
                 AppData.tasks.slice().reverse().forEach(task => {
                     html += `
-                        <div class="admin-task-item" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                        <div class="admin-task-item" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
                             <div style="flex: 1;">
                                 <div style="font-weight: 600; color: var(--accent-primary);">
                                     Задание #${task.number} • ${task.theme}
                                 </div>
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
-                                    ${task.text.substring(0, 50)}${task.text.length > 50 ? '...' : ''}
+                                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">
+                                    ${task.text.substring(0, 40)}${task.text.length > 40 ? '...' : ''}
                                 </div>
-                                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                                <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
                                     Ответ: ${task.answer} | Тип: ${task.type}
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 4px;">
-                                <button class="action-btn edit-task-btn" data-task-id="${task.id}" title="Редактировать" style="width: 32px; height: 32px;">
+                            <div style="display: flex; gap: 3px;">
+                                <button class="action-btn edit-task-btn" data-task-id="${task.id}" title="Редактировать" style="width: 30px; height: 30px;">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="action-btn delete-task-btn" data-task-id="${task.id}" title="Удалить" style="width: 32px; height: 32px;">
+                                <button class="action-btn delete-task-btn" data-task-id="${task.id}" title="Удалить" style="width: 30px; height: 30px;">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -3390,31 +3176,28 @@
                 if (!container) return;
                 
                 if (AppData.exams.length === 0) {
-                    container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Нет вариантов</div>';
+                    container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 16px;">Нет вариантов</div>';
                     return;
                 }
                 
-                let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+                let html = '<div style="display: flex; flex-direction: column; gap: 6px;">';
                 
                 AppData.exams.slice().reverse().forEach(exam => {
                     html += `
-                        <div class="admin-task-item" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                        <div class="admin-task-item" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
                             <div style="flex: 1;">
                                 <div style="font-weight: 600; color: var(--exam-color);">
                                     ${exam.title}
                                 </div>
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
-                                    ${exam.description.substring(0, 50)}${exam.description.length > 50 ? '...' : ''}
+                                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">
+                                    ${exam.description.substring(0, 40)}${exam.description.length > 40 ? '...' : ''}
                                 </div>
-                                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                                <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
                                     ${exam.tasksCount} заданий • ${exam.time} мин • ${exam.difficulty}
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 4px;">
-                                <button class="action-btn edit-exam-btn" data-exam-id="${exam.id}" title="Редактировать" style="width: 32px; height: 32px;">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete-exam-btn" data-exam-id="${exam.id}" title="Удалить" style="width: 32px; height: 32px;">
+                            <div style="display: flex; gap: 3px;">
+                                <button class="action-btn delete-exam-btn" data-exam-id="${exam.id}" title="Удалить" style="width: 30px; height: 30px;">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -3424,21 +3207,6 @@
                 
                 html += '</div>';
                 container.innerHTML = html;
-                
-                container.querySelectorAll('.edit-exam-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const examId = parseInt(this.getAttribute('data-exam-id'));
-                        AdminUI.enableExamEditMode(examId);
-                        const editModeSelect = document.getElementById('admin-exam-edit-mode');
-                        if (editModeSelect) editModeSelect.value = 'edit';
-                        const editGroup = document.getElementById('edit-exam-select-group');
-                        if (editGroup) editGroup.style.display = 'block';
-                        const editSelect = document.getElementById('admin-edit-exam-select');
-                        if (editSelect) editSelect.value = examId;
-                    });
-                });
                 
                 container.querySelectorAll('.delete-exam-btn').forEach(btn => {
                     btn.addEventListener('click', function(e) {
@@ -3453,10 +3221,6 @@
                                 BotAPI.saveDataToBot('exams', AppData.exams);
                                 Utils.showNotification('Вариант удален', 'success');
                                 AdminUI.renderAdminExamsList();
-                                
-                                if (AppData.editingExamId === examId) {
-                                    AdminUI.disableExamEditMode();
-                                }
                             }
                         }
                     });
@@ -3468,20 +3232,20 @@
                 if (!container) return;
                 
                 if (AppData.theory.length === 0) {
-                    container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Нет разделов теории</div>';
+                    container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 16px;">Нет разделов теории</div>';
                     return;
                 }
                 
-                let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+                let html = '<div style="display: flex; flex-direction: column; gap: 6px;">';
                 
                 AppData.theory.slice(-10).reverse().forEach(section => {
                     html += `
-                        <div style="background: var(--bg-secondary); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                            <div style="font-weight: 600; color: var(--accent-primary); margin-bottom: 4px;">
+                        <div style="background: var(--bg-secondary); padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <div style="font-weight: 600; color: var(--accent-primary); margin-bottom: 3px;">
                                 ${section.title}
                             </div>
-                            <div style="font-size: 12px; color: var(--text-secondary);">
-                                ${section.content.substring(0, 80)}${section.content.length > 80 ? '...' : ''}
+                            <div style="font-size: 11px; color: var(--text-secondary);">
+                                ${section.content.substring(0, 70)}${section.content.length > 70 ? '...' : ''}
                             </div>
                         </div>
                     `;
@@ -3555,14 +3319,12 @@
             }
         }
 
-        // ==================== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ====================
         class App {
             static async init() {
                 this.initTelegram();
                 this.loadBotSettings();
                 StorageManager.loadUserData();
                 
-                // Показываем загрузку
                 const loadingOverlay = document.getElementById('loading-overlay');
                 
                 try {
@@ -3586,7 +3348,6 @@
                     SyncManager.startAutoSync();
                     SyncManager.syncUserData();
                     
-                    // Скрываем загрузку с задержкой
                     setTimeout(() => {
                         if (loadingOverlay) {
                             loadingOverlay.classList.add('hidden');
@@ -3601,9 +3362,9 @@
                     if (loadingOverlay) {
                         loadingOverlay.innerHTML = `
                             <div style="text-align: center; color: var(--error-color);">
-                                <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 16px;"></i>
-                                <div style="font-weight: 600; margin-bottom: 8px;">Ошибка загрузки</div>
-                                <div style="font-size: 14px; margin-bottom: 20px;">${error.message}</div>
+                                <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 12px;"></i>
+                                <div style="font-weight: 600; margin-bottom: 6px;">Ошибка загрузки</div>
+                                <div style="font-size: 13px; margin-bottom: 16px;">${error.message}</div>
                                 <button class="btn btn-primary" id="retry-load-btn">
                                     <i class="fas fa-redo"></i>
                                     <span>Повторить</span>
@@ -3630,7 +3391,6 @@
                             document.body.classList.add('theme-dark');
                         }
                         
-                        // Подписываемся на события изменения темы
                         tg.onEvent('themeChanged', () => {
                             if (tg.colorScheme === 'dark') {
                                 document.body.classList.add('theme-dark');
@@ -3645,16 +3405,13 @@
                             userId = 'web_' + Math.random().toString(36).substr(2, 9);
                         }
                     } else {
-                        console.warn('Telegram Web App не доступен, используется веб-режим');
                         userId = 'web_' + Math.random().toString(36).substr(2, 9);
                         
-                        // Определяем тему для веб-режима
                         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                             document.body.classList.add('theme-dark');
                         }
                     }
                 } catch (e) {
-                    console.warn('Ошибка инициализации Telegram Web App:', e);
                     userId = 'web_' + Math.random().toString(36).substr(2, 9);
                 }
             }
@@ -3674,29 +3431,6 @@
                 BOT_API_URL = `https://api.telegram.org/bot${botToken}`;
             }
 
-            static saveBotSettings() {
-                const tokenInput = document.getElementById('bot-token-input');
-                const chatIdInput = document.getElementById('admin-chat-id-input');
-                
-                if (!tokenInput || !chatIdInput) return;
-                
-                const token = tokenInput.value.trim();
-                const chatId = chatIdInput.value.trim();
-                
-                if (token && token !== CONFIG.DEFAULT_BOT_TOKEN) {
-                    botToken = token;
-                    localStorage.setItem(CONFIG.STORAGE_PREFIX + 'bot_token', token);
-                }
-                
-                if (chatId && chatId !== CONFIG.DEFAULT_ADMIN_CHAT_ID) {
-                    adminChatId = chatId;
-                    localStorage.setItem(CONFIG.STORAGE_PREFIX + 'admin_chat_id', chatId);
-                }
-                
-                BOT_API_URL = `https://api.telegram.org/bot${botToken}`;
-                Utils.showNotification('Настройки бота сохранены', 'success');
-            }
-
             static async loadAppData() {
                 try {
                     const [botTasks, botExams, botTheory] = await Promise.all([
@@ -3705,46 +3439,38 @@
                         BotAPI.loadDataFromBot('theory')
                     ]);
                     
+                    const savedTasks = StorageManager.loadAppData('tasks');
+                    const savedExams = StorageManager.loadAppData('exams');
+                    const savedTheory = StorageManager.loadAppData('theory');
+                    
                     if (botTasks && Array.isArray(botTasks) && botTasks.length > 0) {
                         AppData.tasks = botTasks;
                         StorageManager.saveAppData('tasks', AppData.tasks);
+                    } else if (savedTasks && savedTasks.length > 0) {
+                        AppData.tasks = savedTasks;
                     } else {
-                        const savedTasks = StorageManager.loadAppData('tasks');
-                        if (savedTasks) {
-                            AppData.tasks = savedTasks;
-                        } else {
-                            AppData.tasks = this.getInitialTasks();
-                            StorageManager.saveAppData('tasks', AppData.tasks);
-                            await BotAPI.saveDataToBot('tasks', AppData.tasks);
-                        }
+                        AppData.tasks = this.getInitialTasks();
+                        StorageManager.saveAppData('tasks', AppData.tasks);
                     }
                     
                     if (botExams && Array.isArray(botExams) && botExams.length > 0) {
                         AppData.exams = botExams;
                         StorageManager.saveAppData('exams', AppData.exams);
+                    } else if (savedExams && savedExams.length > 0) {
+                        AppData.exams = savedExams;
                     } else {
-                        const savedExams = StorageManager.loadAppData('exams');
-                        if (savedExams) {
-                            AppData.exams = savedExams;
-                        } else {
-                            AppData.exams = this.getInitialExams();
-                            StorageManager.saveAppData('exams', AppData.exams);
-                            await BotAPI.saveDataToBot('exams', AppData.exams);
-                        }
+                        AppData.exams = this.getInitialExams();
+                        StorageManager.saveAppData('exams', AppData.exams);
                     }
                     
                     if (botTheory && Array.isArray(botTheory) && botTheory.length > 0) {
                         AppData.theory = botTheory;
                         StorageManager.saveAppData('theory', AppData.theory);
+                    } else if (savedTheory && savedTheory.length > 0) {
+                        AppData.theory = savedTheory;
                     } else {
-                        const savedTheory = StorageManager.loadAppData('theory');
-                        if (savedTheory) {
-                            AppData.theory = savedTheory;
-                        } else {
-                            AppData.theory = this.getInitialTheory();
-                            StorageManager.saveAppData('theory', AppData.theory);
-                            await BotAPI.saveDataToBot('theory', AppData.theory);
-                        }
+                        AppData.theory = this.getInitialTheory();
+                        StorageManager.saveAppData('theory', AppData.theory);
                     }
                     
                     Utils.updateSyncStatus('tasks', AppData.tasks.length);
@@ -3841,7 +3567,6 @@
             }
 
             static setupEventListeners() {
-                // Навигация
                 document.querySelectorAll('.nav-btn').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.preventDefault();
@@ -3852,14 +3577,12 @@
                         }
                     });
                     
-                    // Добавляем обработчик для тач-устройств
                     btn.addEventListener('touchstart', function(e) {
                         e.preventDefault();
                         e.currentTarget.click();
                     }, { passive: false });
                 });
                 
-                // Основные кнопки
                 const setupButton = (id, handler) => {
                     const btn = document.getElementById(id);
                     if (btn) {
@@ -3869,7 +3592,6 @@
                             handler();
                         });
                         
-                        // Добавляем обработчик для тач-устройств
                         btn.addEventListener('touchstart', (e) => {
                             e.preventDefault();
                             e.currentTarget.click();
@@ -3890,7 +3612,6 @@
                     }
                 });
                 
-                // Кнопки в шапке
                 document.querySelectorAll('.icon-btn').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.preventDefault();
@@ -3908,14 +3629,12 @@
                         }
                     });
                     
-                    // Добавляем обработчик для тач-устройств
                     btn.addEventListener('touchstart', function(e) {
                         e.preventDefault();
                         e.currentTarget.click();
                     }, { passive: false });
                 });
                 
-                // Админ-панель
                 const setupAdminButton = (id, handler) => {
                     const btn = document.getElementById(id);
                     if (btn) {
@@ -3925,7 +3644,6 @@
                             handler();
                         });
                         
-                        // Добавляем обработчик для тач-устройств
                         btn.addEventListener('touchstart', (e) => {
                             e.preventDefault();
                             e.currentTarget.click();
@@ -3941,7 +3659,6 @@
                 setupAdminButton('reset-user-btn', () => StorageManager.resetUserData());
                 setupAdminButton('force-sync-btn', () => SyncManager.forceSync());
                 
-                // Вкладки админ-панели
                 document.querySelectorAll('.admin-tab').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.preventDefault();
@@ -3950,14 +3667,12 @@
                         UI.switchAdminTab(tabName);
                     });
                     
-                    // Добавляем обработчик для тач-устройств
                     btn.addEventListener('touchstart', function(e) {
                         e.preventDefault();
                         e.currentTarget.click();
                     }, { passive: false });
                 });
                 
-                // Режимы редактирования
                 const editModeSelect = document.getElementById('admin-edit-mode');
                 if (editModeSelect) {
                     editModeSelect.addEventListener('change', function() {
@@ -3967,7 +3682,6 @@
                     });
                 }
                 
-                // Выбор для редактирования
                 const editTaskSelect = document.getElementById('admin-edit-task-select');
                 if (editTaskSelect) {
                     editTaskSelect.addEventListener('change', function() {
@@ -3976,11 +3690,9 @@
                     });
                 }
                 
-                // Авторизация
                 setupAdminButton('submit-password', () => AdminUI.checkPassword());
                 setupAdminButton('cancel-auth', () => AdminUI.hideAuthModal());
                 
-                // Обработка Enter
                 document.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         const answerInput = document.getElementById('answer-input');
@@ -4004,7 +3716,6 @@
                     });
                 }
                 
-                // Предотвращаем стандартное поведение для всех кнопок
                 document.querySelectorAll('button').forEach(btn => {
                     btn.addEventListener('touchstart', function(e) {
                         if (this.getAttribute('type') !== 'submit') {
@@ -4015,21 +3726,17 @@
             }
         }
 
-        // ==================== ЗАПУСК ПРИЛОЖЕНИЯ ====================
         document.addEventListener('DOMContentLoaded', function() {
-            // Небольшая задержка для инициализации Telegram Web App
             setTimeout(() => {
                 App.init();
             }, 100);
             
-            // Предотвращаем масштабирование на тач-устройствах
             document.addEventListener('touchmove', function(e) {
                 if (e.scale !== 1) {
                     e.preventDefault();
                 }
             }, { passive: false });
             
-            // Предотвращаем выделение текста при долгом нажатии
             document.addEventListener('contextmenu', function(e) {
                 if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
                     e.preventDefault();
