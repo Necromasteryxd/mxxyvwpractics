@@ -1885,82 +1885,106 @@
             }
         }
 
-        class BotAPI {
-            static async saveDataToBot(key, data) {
-                if (!botToken || botToken === CONFIG.DEFAULT_BOT_TOKEN) {
-                    console.warn('Настройки бота не заданы');
-                    return false;
-                }
-                
-                try {
-                    const message = `DATA_${key}:${JSON.stringify(data)}`;
-                    
-                    const response = await fetch(BOT_API_URL + '/sendMessage', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            chat_id: adminChatId,
-                            text: message,
-                            parse_mode: 'HTML'
-                        })
-                    });
-                    
-                    const result = await response.json();
-                    return result.ok;
-                } catch (error) {
-                    console.error('Ошибка сохранения данных в боте:', error);
-                    return false;
-                }
-            }
+class BotAPI {
+    static async saveDataToBot(key, data) {
+        if (!botToken || botToken === CONFIG.DEFAULT_BOT_TOKEN) {
+            console.warn('Настройки бота не заданы');
+            return false;
+        }
+        
+        try {
+            const message = `DATA_${key}:${JSON.stringify(data)}`;
+            
+            const response = await fetch(BOT_API_URL + '/sendMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: adminChatId,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            });
+            
+            const result = await response.json();
+            return result.ok;
+        } catch (error) {
+            console.error('Ошибка сохранения данных в боте:', error);
+            return false;
+        }
+    }
 
-            static async loadDataFromBot(key) {
-                if (!botToken || botToken === CONFIG.DEFAULT_BOT_TOKEN) {
-                    console.warn('Токен бота не задан');
-                    return null;
-                }
-                
-                try {
-                    const response = await fetch(BOT_API_URL + '/getUpdates?offset=-100');
-                    const data = await response.json();
-                    
-                    if (!data.ok) {
-                        console.error('Ошибка загрузки данных из бота');
+    static async loadDataFromBot(key) {
+        if (!botToken || botToken === CONFIG.DEFAULT_BOT_TOKEN) {
+            console.warn('Токен бота не задан');
+            return null;
+        }
+        
+        try {
+            const response = await fetch(`${BOT_API_URL}/getUpdates?offset=0&limit=100`);
+            const data = await response.json();
+            
+            if (!data.ok) {
+                console.error('Ошибка загрузки данных из бота');
+                return null;
+            }
+            
+            const messages = data.result || [];
+            
+            for (let i = messages.length - 1; i >= 0; i--) {
+                const message = messages[i].message;
+                if (message && message.text && message.text.startsWith(`DATA_${key}:`)) {
+                    const jsonString = message.text.substring(`DATA_${key}:`.length);
+                    try {
+                        const parsedData = JSON.parse(jsonString);
+                        console.log(`✅ Данные загружены из бота: ${key}, элементов: ${parsedData.length}`);
+                        return parsedData;
+                    } catch (e) {
+                        console.error('Ошибка парсинга JSON:', e);
                         return null;
                     }
-                    
-                    const messages = data.result || [];
-                    for (let i = messages.length - 1; i >= 0; i--) {
-                        const message = messages[i].message;
-                        if (message && message.text && message.text.startsWith(`DATA_${key}:`)) {
-                            const jsonString = message.text.substring(`DATA_${key}:`.length);
-                            return JSON.parse(jsonString);
-                        }
-                    }
-                    
-                    return null;
-                } catch (error) {
-                    console.error('Ошибка загрузки данных из бота:', error);
-                    return null;
                 }
             }
-
-            static async deleteDataFromBot(key, id) {
-                try {
-                    const data = await this.loadDataFromBot(key);
-                    if (data && Array.isArray(data)) {
-                        const updatedData = data.filter(item => item.id !== id);
-                        return await this.saveDataToBot(key, updatedData);
-                    }
-                    return false;
-                } catch (error) {
-                    console.error('Ошибка удаления данных из бота:', error);
-                    return false;
-                }
-            }
+            
+            console.log(`Данные ${key} не найдены в истории бота`);
+            return null;
+            
+        } catch (error) {
+            console.error('Ошибка загрузки данных из бота:', error);
+            return null;
         }
+    }
 
+    static async deleteDataFromBot(key, id) {
+        try {
+            const data = await this.loadDataFromBot(key);
+            if (data && Array.isArray(data)) {
+                const updatedData = data.filter(item => item.id !== id);
+                return await this.saveDataToBot(key, updatedData);
+            }
+            return false;
+        } catch (error) {
+            console.error('Ошибка удаления данных из бота:', error);
+            return false;
+        }
+    }
+
+    static async clearOldUpdates() {
+        try {
+            const response = await fetch(`${BOT_API_URL}/getUpdates?offset=0&limit=1`);
+            const data = await response.json();
+            
+            if (data.ok && data.result && data.result.length > 0) {
+                const lastUpdateId = data.result[0].update_id;
+                await fetch(`${BOT_API_URL}/getUpdates?offset=${lastUpdateId + 1}`);
+                console.log('✅ Старые сообщения очищены');
+            }
+        } catch (error) {
+            console.error('Ошибка очистки updates:', error);
+        }
+    }
+}
         class SyncManager {
             static async syncAllData() {
                 if (!botToken || botToken === CONFIG.DEFAULT_BOT_TOKEN) return false;
@@ -3743,6 +3767,210 @@
                 }
             });
         });
+
+
+        const debugBot = {
+    testConnection: async () => {
+        console.log('=== ТЕСТ ПОДКЛЮЧЕНИЯ К БОТУ ===');
+        try {
+            const response = await fetch(`${BOT_API_URL}/getMe`);
+            const data = await response.json();
+            console.log('Статус:', data.ok ? '✅ Бот работает' : '❌ Ошибка');
+            if (data.ok) {
+                console.log('Имя бота:', data.result.first_name);
+                console.log('Username:', `@${data.result.username}`);
+            }
+            return data.ok;
+        } catch (e) {
+            console.error('❌ Ошибка:', e);
+            return false;
+        }
+    },
+    
+    checkWebhook: async () => {
+        console.log('=== ПРОВЕРКА ВЕБХУКА ===');
+        try {
+            const response = await fetch(`${BOT_API_URL}/getWebhookInfo`);
+            const data = await response.json();
+            console.log('Вебхук:', data.result.url ? `✅ Активен (${data.result.url})` : '❌ Не активен');
+            if (data.result.last_error_message) {
+                console.log('Последняя ошибка:', data.result.last_error_message);
+            }
+            return data;
+        } catch (e) {
+            console.error('❌ Ошибка:', e);
+            return null;
+        }
+    },
+    
+    deleteWebhook: async () => {
+        console.log('=== УДАЛЕНИЕ ВЕБХУКА ===');
+        try {
+            const response = await fetch(`${BOT_API_URL}/deleteWebhook?drop_pending_updates=true`);
+            const data = await response.json();
+            console.log('Результат:', data.ok ? '✅ Вебхук удален' : '❌ Ошибка');
+            return data.ok;
+        } catch (e) {
+            console.error('❌ Ошибка:', e);
+            return false;
+        }
+    },
+    
+    getMessages: async () => {
+        console.log('=== ПОЛУЧЕНИЕ СООБЩЕНИЙ ===');
+        try {
+            const response = await fetch(`${BOT_API_URL}/getUpdates?offset=-50`);
+            const data = await response.json();
+            console.log('Найдено сообщений:', data.result?.length || 0);
+            if (data.result && data.result.length > 0) {
+                data.result.forEach((msg, i) => {
+                    const text = msg.message?.text || '';
+                    console.log(`📨 Сообщение ${i + 1} (ID: ${msg.update_id}):`, 
+                               text.length > 50 ? text.substring(0, 50) + '...' : text);
+                });
+            }
+            return data;
+        } catch (e) {
+            console.error('❌ Ошибка:', e);
+            return null;
+        }
+    },
+    
+    sendTestMessage: async () => {
+        console.log('=== ТЕСТ ОТПРАВКИ СООБЩЕНИЯ ===');
+        try {
+            // 🔧 Пробуем разные форматы chat_id
+            const chatIds = [
+                "1527919061",        // как число в строке
+                1527919061,          // как число
+                "@MXXYVW",   // username (если есть)
+                "-1001527919061"     // с префиксом для группы
+            ];
+            
+            let success = false;
+            
+            for (const chatId of chatIds) {
+                console.log(`Пробуем chat_id: ${chatId}`);
+                
+                const response = await fetch(BOT_API_URL + '/sendMessage', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: '🤖 Тестовое сообщение от приложения\n' + 
+                              `Время: ${new Date().toLocaleTimeString()}\n` +
+                              `Chat ID: ${chatId}`,
+                        parse_mode: 'HTML'
+                    })
+                });
+                
+                const data = await response.json();
+                console.log(`Результат для ${chatId}:`, data.ok ? '✅' : '❌', data.description || '');
+                
+                if (data.ok) {
+                    success = true;
+                    console.log('✅ Сообщение успешно отправлено!');
+                    console.log('ID сообщения:', data.result.message_id);
+                    break;
+                } else {
+                    console.log('Ошибка:', data.description);
+                }
+                
+                // Небольшая пауза между попытками
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            if (!success) {
+                console.log('❌ Все попытки отправки провалились');
+                console.log('Проверьте:');
+                console.log('1. Бот добавлен в контакты');
+                console.log('2. Вы писали боту /start');
+                console.log('3. Chat ID правильный');
+            }
+            
+            return success;
+            
+        } catch (e) {
+            console.error('❌ Ошибка сети:', e);
+            return false;
+        }
+    },
+    
+    // 🔧 НОВАЯ ФУНКЦИЯ: Получить обновления в реальном времени
+    getRealTimeUpdates: async () => {
+        console.log('=== РЕАЛЬНОЕ ВРЕМЯ: ОЖИДАНИЕ СООБЩЕНИЙ ===');
+        console.log('Отправьте боту сообщение в Telegram...');
+        
+        try {
+            // Получаем последний update_id
+            const response = await fetch(`${BOT_API_URL}/getUpdates?offset=0&limit=1`);
+            const data = await response.json();
+            
+            let lastUpdateId = 0;
+            if (data.ok && data.result && data.result.length > 0) {
+                lastUpdateId = data.result[0].update_id;
+            }
+            
+            console.log(`Последний update_id: ${lastUpdateId}`);
+            console.log('Ожидаю новые сообщения (30 секунд)...');
+            
+            // Ждем новые сообщения с таймаутом
+            const updateResponse = await fetch(
+                `${BOT_API_URL}/getUpdates?offset=${lastUpdateId + 1}&timeout=30`
+            );
+            
+            const updateData = await updateResponse.json();
+            
+            if (updateData.ok && updateData.result && updateData.result.length > 0) {
+                console.log(`✅ Получено новых сообщений: ${updateData.result.length}`);
+                updateData.result.forEach((msg, i) => {
+                    console.log(`📩 Новое сообщение ${i + 1}:`, msg.message?.text || 'Нет текста');
+                });
+            } else {
+                console.log('⏰ Таймаут: новых сообщений не получено');
+            }
+            
+        } catch (e) {
+            console.error('❌ Ошибка:', e);
+        }
+    },
+    
+    runAllTests: async () => {
+        console.clear();
+        console.log('🚀 ЗАПУСК ВСЕХ ТЕСТОВ БОТА 🚀');
+        console.log('Токен:', botToken ? '✅ Установлен' : '❌ Не установлен');
+        console.log('URL API:', BOT_API_URL);
+        console.log('='.repeat(50));
+        
+        await debugBot.testConnection();
+        console.log('-'.repeat(30));
+        
+        await debugBot.checkWebhook();
+        console.log('-'.repeat(30));
+        
+        await debugBot.deleteWebhook();
+        console.log('-'.repeat(30));
+        
+        await debugBot.getMessages();
+        console.log('-'.repeat(30));
+        
+        await debugBot.sendTestMessage();
+        console.log('='.repeat(50));
+        console.log('🎯 Тестирование завершено');
+    }
+};
+
+// Добавляем в глобальную область видимости
+window.debugBot = debugBot;
+
+// Автоматический запуск тестов при загрузке
+setTimeout(() => {
+    console.log('🔄 Для тестирования бота: debugBot.runAllTests()');
+    console.log('🔧 Для отправки теста: debugBot.sendTestMessage()');
+    console.log('📨 Для проверки сообщений: debugBot.getMessages()');
+    console.log('❌ Для удаления вебхука: debugBot.deleteWebhook()');
+    console.log('⏰ Для реального времени: debugBot.getRealTimeUpdates()');
+}, 3000);
     </script>
 </body>
 </html>
